@@ -1,7 +1,7 @@
 <template>
     <div class="login">
     <h1>Login</h1>
-    <form @submit.prevent="handleSubmit()">
+    <form @submit.prevent="handleLog()">
         <div class="form-group">
             <label>Name</label>
             <input type="text" class="form-control" v-model="name" placeholder="Enter username"/>
@@ -30,7 +30,7 @@ export default {
     }
   },
   methods: {
-    async handleSubmit () {
+    async handleLog () {
       const data = {
         username: this.name,
         password: this.password
@@ -38,6 +38,8 @@ export default {
 
       // const response = await axios.post('login', data)
       console.log(data)
+
+      // localStorage.setItem('token', respone.data.token)
 
       this.$store.dispatch('user', this.name)
 
@@ -68,7 +70,7 @@ export default {
 
 @media only screen and (max-width: 700px) {
     .login {
-        margin: 15% auto;
+        margin: 25% auto;
     }
 }
 

@@ -2,8 +2,15 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    user: 'Test',
-    counter: 3
+    user: null,
+    sessions: [
+      {
+        name: 'Test'
+      },
+      {
+        name: 'Test2'
+      }
+    ]
   },
   mutations: {
     user (state, user) {
@@ -18,6 +25,10 @@ export default createStore({
   getters: {
     user: (state) => {
       return state.user
+    },
+    sessions: (state) => {
+      return state.sessions
     }
+
   }
 })

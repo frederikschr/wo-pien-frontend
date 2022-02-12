@@ -7,9 +7,9 @@
 
               <nav>
                     <ul class="nav-links" id="nav-links">
-
-                        <li><router-link class="routers" to="login">Login</router-link></li>
-                        <li><router-link class="routers" to="register">Sign up</router-link></li>
+                        <li v-if="user" @click="logout">Logout</li>
+                        <li v-if="!user"><router-link class="routers" to="login">Login</router-link></li>
+                        <li v-if="!user"><router-link class="routers" to="register">Sign up</router-link></li>
                         <li><router-link class="routers" to="/">Home</router-link></li>
                     </ul>
 
@@ -42,6 +42,11 @@ export default {
       } else {
         menu.style.maxHeight = '0px'
       }
+    },
+    logout () {
+      this.$store.state.user = null
+      localStorage.removeItem('token')
+      this.$router.push('/')
     }
   },
   computed: {
@@ -141,7 +146,7 @@ button:hover {
 @media only screen and (max-width: 700px) {
     .nav-links {
       width: 100%;
-      height: 10%;
+      height: 9%;
       position: absolute;
       top: 80px;
       right: 0;
@@ -151,7 +156,7 @@ button:hover {
     }
     .nav-links li{
         display: block;
-        margin-top: 10px;
+        margin-top: 3%;
         float: right;
     }
 
@@ -164,5 +169,4 @@ button:hover {
     }
 
 }
-
 </style>

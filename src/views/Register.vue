@@ -71,7 +71,7 @@ export default {
 
 @media only screen and (max-width: 700px) {
     .register {
-        margin: 15% auto;
+        margin: 25% auto;
     }
 }
 
