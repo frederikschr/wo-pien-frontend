@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     user: null,
+    flashed: { message: 'This is a test!', success: true },
     sessions: [
       {
         name: 'Test'
@@ -15,11 +16,17 @@ export default createStore({
   mutations: {
     user (state, user) {
       state.user = user
+    },
+    flashed (state, flashed) {
+      state.flashed = flashed
     }
   },
   actions: {
     user (context, user) {
       context.commit('user', user)
+    },
+    flashed (context, flashed) {
+      context.commit('flashed', flashed)
     }
   },
   getters: {
@@ -28,6 +35,9 @@ export default createStore({
     },
     sessions: (state) => {
       return state.sessions
+    },
+    flashed: (state) => {
+      return state.flashed
     }
 
   }

@@ -19,7 +19,7 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 
 export default {
   name: 'Login',
@@ -31,18 +31,18 @@ export default {
   },
   methods: {
     async handleLog () {
-      const data = {
-        username: this.name,
-        password: this.password
-      }
-
-      // const response = await axios.post('login', data)
-      console.log(data)
-
-      // localStorage.setItem('token', respone.data.token)
-
-      this.$store.dispatch('user', this.name)
-
+      var app = this
+      await axios.get('http://127.0.0.1:5000/user/create', {
+        params: {
+          name: this.name,
+          password: this.password
+        }
+      }).then(function (response) {
+        console.log(response.data.user)
+        // localStorage.setItem('token', respone.data.token)
+        app.$store.dispatch('user', response.data.user)
+        app.$store.dispatch('flashed', { message: 'Logged in successfully', success: true })
+      })
       this.$router.push('/')
     }
   }

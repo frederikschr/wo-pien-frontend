@@ -4,13 +4,12 @@
 
       <header>
               <h1>WOPIEN</h1>
-
               <nav>
                     <ul class="nav-links" id="nav-links">
-                        <li v-if="user" @click="logout">Logout</li>
-                        <li v-if="!user"><router-link class="routers" to="login">Login</router-link></li>
-                        <li v-if="!user"><router-link class="routers" to="register">Sign up</router-link></li>
-                        <li><router-link class="routers" to="/">Home</router-link></li>
+                        <li v-if="user"><router-link class="routers-nav" id="logout" to="/" @click="logout()">Logout</router-link></li>
+                        <li v-if="!user"><router-link class="routers-nav" to="login">Login</router-link></li>
+                        <li v-if="!user"><router-link class="routers-nav" to="register">Sign up</router-link></li>
+                        <li><router-link class="routers-nav" to="/">Home</router-link></li>
                     </ul>
 
               </nav>
@@ -37,20 +36,31 @@ export default {
   methods: {
     toggleMenu () {
       var menu = document.getElementById('nav-links')
+      var routers = document.getElementsByClassName('routers-nav')
       if (menu.style.maxHeight === '0px') {
         menu.style.maxHeight = '130px'
+        for (var i = 0; i < routers.length; i++) {
+          routers[i].style.display = 'block'
+        }
       } else {
         menu.style.maxHeight = '0px'
+        setTimeout(() => {
+          for (var i = 0; i < routers.length; i++) {
+            routers[i].style.display = 'none'
+          }
+        }, 400)
+      }
+      if (this.flashed) {
+        this.$store.dispatch('flashed', null)
       }
     },
     logout () {
       this.$store.state.user = null
       localStorage.removeItem('token')
-      this.$router.push('/')
     }
   },
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user', 'flashed'])
   }
 }
 </script>
@@ -65,10 +75,10 @@ export default {
     padding: 0;
 }
 
-li, a, button, router-link {
+li, a, button, router-link, .router-nav {
     font-weight: 500;
     font-size: 16px;
-    color: #edf0f1;
+    color: #ffffff;
     text-decoration: none;
 }
 
@@ -90,7 +100,6 @@ header {
 .nav-links li {
     display: inline-block;
     padding: 20px 30px;
-    color: white;
     margin-top: 20px;
 }
 
@@ -168,5 +177,8 @@ button:hover {
       display: block;
     }
 
+    #logout {
+      display: none
+    }
 }
 </style>

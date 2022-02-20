@@ -10,7 +10,7 @@
     </div>
 
     <div v-else class="base">
-      <h1>Welcome {{ user }}</h1>
+      <h1>Welcome {{ user.username }}</h1>
       <div class="header">
         <div>
           <input class="form-control rounded-0 py-2" type="search" id="example-search-input" placeholder="Search...">
