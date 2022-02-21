@@ -2,26 +2,40 @@
   <div class="create">
     <h1>Create dicke Piener session</h1>
 
-     <form @submit.prevent="handleLog()">
+     <form @submit.prevent="handleCreate()">
         <div class="form-group">
             <label>Name</label>
-            <input type="text" class="form-control" v-model="name" maxlength="20" placeholder="Enter name of the piener session"/>
+            <input type="text" class="form-control" v-model="name" maxlength="20" placeholder="Enter name of session"/>
         </div>
 
         <div class="form-group" id="description">
             <label>Description</label>
-            <textarea cols="20" rows="5"></textarea>
-            <input type="text" class="form-control" v-model="description" maxlength="100" cols="2" rows="5" placeholder="Enter name of the piener session"/>
+            <textarea v-model="desciption" cols="20" rows="5" placeholder="Add description"></textarea>
         </div>
         <div class="form-group">
             <label>Address</label>
-            <input type="password" class="form-control" v-model="password" maxlength="20" placeholder="Enter address"/>
+            <input type="text" class="form-control" v-model="address" maxlength="20" placeholder="Enter address"/>
         </div>
         <div class="form-group">
             <label>Date</label>
-            <input type="date" class="form-control" v-model="password" placeholder="Enter date"/>
+            <input type="date" class="form-control" v-model="date" placeholder="Enter date" min="2022-03-01" max="2023-01-01"/>
         </div>
-        <button class="btn btn-primary btn-lock">Login</button>
+
+        <div class="form-group">
+            <label>Time</label>
+            <input type="time" class="form-control" v-model="date" placeholder="Enter date" min="2022-03-01" max="2023-01-01"/>
+        </div>
+
+        <div>
+          <label>People</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="people-field"/>
+            <button class="btn btn-primary btn-lock">Add</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-lock" id="submit">Create</button>
+
     </form>
 
   </div>
@@ -34,13 +48,18 @@ export default {
     return {
       name: '',
       desciption: '',
-      Address: '',
-      Date: ''
+      address: '',
+      date: ''
     }
   },
   created () {
     if (this.$store.state.user == null) {
       this.$router.push('/')
+    }
+  },
+  methods: {
+    handleCreate () {
+      this.$store.dispatch('flashed', { message: 'Created', success: true })
     }
   }
 }
@@ -50,25 +69,33 @@ export default {
 .create {
   width: 50%;
   margin: 5% auto;
-  margin-top: 100px;
+  margin-top: 5em;
 }
 
 .create h1 {
   text-align: center;
+  margin-bottom: 1em;
 }
 
-.create form {
-  padding: 2em 0;
+textarea {
+  width: 100%;
+  float: left;
+  padding: 1em 1em;
+  margin-bottom: 1em;
 }
 
-.create button {
+.input-group button {
+  margin-top: .5em;
+  height: 2.5em;
+}
+
+#submit {
   float: left;
   margin-top: 1em;
 }
 
-#description .form-control {
-  padding-bottom: 2em;
-  height: 6em;
+#people-field {
+  width: 50%;
 }
 
 @media only screen and (max-width: 700px) {

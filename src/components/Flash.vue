@@ -1,13 +1,12 @@
 <template>
-  <div v-if="flashed" class="flash">
+  <div v-if="flashed" class="flash" @click="delFlash()">
       <div v-if="flashed.success" class="alert alert-success" role="alert">
         {{ flashed.message }}
-        <button @click="delFlash()" type="button" class="btn-close" aria-label="Close"></button>
+        <button type="button" class="btn-close" aria-label="Close"></button>
       </div>
-
       <div v-else class="alert alert-danger" role="alert">
         {{ flashed.message }}
-        <button @click="delFlash()" type="button" class="btn-close" aria-label="Close"></button>
+        <button type="button" class="btn-close" aria-label="Close"></button>
       </div>
   </div>
 </template>

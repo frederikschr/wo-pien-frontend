@@ -108,11 +108,7 @@ header {
    text-decoration: none;
  }
 
-.routers {
-    color: white;
-}
-
-.routers:hover {
+.routers-nav:hover {
     transition: .3s;
     color: rgba(0, 136, 169, 1);
 }
