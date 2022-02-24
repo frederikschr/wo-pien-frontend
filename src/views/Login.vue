@@ -37,6 +37,8 @@ export default {
           name: this.name,
           password: this.password
         }
+      }).catch(function (e) {
+        app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
       }).then(function (response) {
         console.log(response.data.user)
         // localStorage.setItem('token', respone.data.token)
@@ -50,7 +52,6 @@ export default {
 </script>
 
 <style>
-
 .login {
     width: 50%;
     margin: 5% auto;
