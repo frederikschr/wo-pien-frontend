@@ -10,7 +10,7 @@
 
         <div class="form-group" id="description">
             <label>Description</label>
-            <textarea v-model="desciption" cols="20" rows="5" placeholder="Add description"></textarea>
+            <textarea v-model="desciption" cols="20" rows="5" placeholder="Add description" maxlength="250"></textarea>
         </div>
         <div class="form-group">
             <label>Address</label>
@@ -18,20 +18,25 @@
         </div>
         <div class="form-group">
             <label>Date</label>
-            <input type="date" class="form-control" v-model="date" placeholder="Enter date" min="2022-03-01" max="2023-01-01"/>
+            <input type="date" class="form-control" v-model="date" placeholder="Enter date" min="01-03-2022" max="01-01-2023"/>
         </div>
 
         <div class="form-group">
             <label>Time</label>
-            <input type="time" class="form-control" v-model="date" placeholder="Enter date" min="2022-03-01" max="2023-01-01"/>
+            <input type="time" class="form-control" v-model="time" placeholder="Enter date" min="2022-03-01" max="2023-01-01"/>
         </div>
 
         <div>
           <label>People</label>
           <div class="input-group">
-            <input type="text" class="form-control" id="people-field"/>
-            <button class="btn btn-primary btn-lock">Add</button>
+            <input type="text" v-model="person" class="form-control" id="people-field"/>
+            <button @click="addPerson()" class="btn btn-primary btn-lock">Add</button>
           </div>
+          <b>People</b>
+          <div class="person" v-for="person in people" :key="person">
+            {{ person }}
+          </div>
+
         </div>
 
         <button class="btn btn-primary btn-lock" id="submit">Create</button>
@@ -42,6 +47,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Create',
   data () {
@@ -49,18 +56,32 @@ export default {
       name: '',
       desciption: '',
       address: '',
-      date: ''
+      date: null,
+      time: null,
+      person: '',
+      people: []
     }
   },
   created () {
     if (this.$store.state.user == null) {
       this.$router.push('/')
+    } else {
+      this.people.push(this.user.username)
     }
   },
   methods: {
     handleCreate () {
       this.$store.dispatch('flashed', { message: 'Created', success: true })
+    },
+    addPerson () {
+      if (this.person !== '') {
+        this.people.push(this.person)
+        this.person = ''
+      }
     }
+  },
+  computed: {
+    ...mapGetters(['user'])
   }
 }
 </script>
@@ -96,6 +117,10 @@ textarea {
 
 #people-field {
   width: 50%;
+}
+
+.person {
+  padding: 1em;
 }
 
 @media only screen and (max-width: 700px) {

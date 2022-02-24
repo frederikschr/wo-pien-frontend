@@ -165,6 +165,14 @@ button:hover {
         float: right;
     }
 
+    .nav-links {
+      max-height: 0px;
+    }
+
+    .routers-nav {
+      display: none;
+    }
+
     .nav-bar button {
       display: none;
     }
