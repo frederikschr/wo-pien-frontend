@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Register',
   data () {
@@ -33,18 +35,28 @@ export default {
   },
   methods: {
     async handleReg () {
-      const data = {
-        username: this.name,
-        email: this.email,
-        password: this.password
+      var app = this
+      var failed = false
+      if (this.name !== '' && this.email !== '' && this.password !== '') {
+        await axios.post('http://127.0.0.1:5000/user', {
+          name: this.name,
+          email: this.email,
+          password: this.password
+        }).catch(function (e) {
+          if (e.response != null) {
+            const error = Object.values(e.response.data)[0][0]
+            failed = true
+            app.$store.dispatch('flashed', { message: error, success: false })
+          } else {
+            app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
+          }
+        }).then(function (response) {
+          if (!failed) {
+            app.$store.dispatch('flashed', { message: response.data.message, success: true })
+            this.$router.push('/login')
+          }
+        })
       }
-
-      // const response = await axios.post('login', data)
-      console.log(data)
-
-      // this.$store.dispatch('user', this.name)
-
-      this.$router.push('/login')
     }
   }
 }

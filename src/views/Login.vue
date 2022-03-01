@@ -31,21 +31,26 @@ export default {
   },
   methods: {
     async handleLog () {
-      var app = this
-      await axios.get('http://127.0.0.1:5000/user/create', {
-        params: {
-          name: this.name,
-          password: this.password
-        }
-      }).catch(function (e) {
-        app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
-      }).then(function (response) {
-        console.log(response.data.user)
-        // localStorage.setItem('token', respone.data.token)
-        app.$store.dispatch('user', response.data.user)
-        app.$store.dispatch('flashed', { message: 'Logged in successfully', success: true })
-      })
-      this.$router.push('/')
+      if (this.name !== '' && this.password !== '') {
+        const app = this
+        await axios.get('http://127.0.0.1:5000/user', {
+          params: {
+            name: this.name,
+            password: this.password
+          }
+        }).catch(function (e) {
+          if (e.response != null) {
+            app.$store.dispatch('flashed', { message: e.response.data.error, success: false })
+          } else {
+            app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
+          }
+        }).then(function (response) {
+          // localStorage.setItem('token', respone.data.token)
+          app.$store.dispatch('user', response.data.user)
+          app.$store.dispatch('flashed', { message: 'Logged in successfully', success: true })
+        })
+        this.$router.push('/')
+      }
     }
   }
 }

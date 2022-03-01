@@ -57,6 +57,7 @@ export default {
     logout () {
       this.$store.state.user = null
       localStorage.removeItem('token')
+      this.toggleMenu()
     }
   },
   computed: {
@@ -140,7 +141,7 @@ button {
     transition: all 0.3s ease 0s;
 }
 
-button:hover {
+.nav-bar button:hover {
     background-color: rgba(0, 136, 169, 0.8);
 }
 
