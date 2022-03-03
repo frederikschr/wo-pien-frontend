@@ -74,6 +74,7 @@ export default {
   methods: {
     async handleCreate () {
       const app = this
+      var failed = false
       await axios.post('http://127.0.0.1:5000/session/create', {
         name: this.name,
         desciption: this.desciption,
@@ -82,14 +83,17 @@ export default {
         time: this.time,
         people: this.people
       }).catch(function (e) {
+        failed = true
         if (e.response != null) {
           app.$store.dispatch('flashed', { message: e.response.data.error, success: false })
         } else {
           app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
         }
       }).then(function (response) {
-        app.$store.dispatch('flashed', { message: 'Created', success: true })
-        app.$$router.push('/')
+        if (!failed) {
+          app.$store.dispatch('flashed', { message: 'Created', success: true })
+          app.$$router.push('/')
+        }
       })
     },
     addPerson () {

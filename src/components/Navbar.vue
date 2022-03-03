@@ -57,7 +57,9 @@ export default {
     logout () {
       this.$store.state.user = null
       localStorage.removeItem('token')
-      this.toggleMenu()
+      if (screen.width < 700) {
+        this.toggleMenu()
+      }
     }
   },
   computed: {

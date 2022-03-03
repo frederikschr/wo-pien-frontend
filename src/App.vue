@@ -1,7 +1,6 @@
 <template>
   <Navbar/>
   <Flash/>
-
   <router-view/>
 </template>
 

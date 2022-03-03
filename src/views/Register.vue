@@ -4,15 +4,15 @@
     <form @submit.prevent="handleReg()">
         <div class="form-group">
             <label>Name</label>
-            <input type="text" class="form-control" v-model="name" placeholder="Enter username"/>
+            <input type="text" class="form-control" maxlength="20" v-model="name" placeholder="Enter username"/>
         </div>
         <div class="form-group">
             <label>Email</label>
-            <input type="email" class="form-control" v-model="email" placeholder="Enter email"/>
+            <input type="email" class="form-control" maxlength="35" v-model="email" placeholder="Enter email"/>
         </div>
         <div class="form-group">
             <label>Password</label>
-            <input type="password" class="form-control" v-model="password" placeholder="Enter password"/>
+            <input type="password" class="form-control" maxlength="20" v-model="password" placeholder="Enter password"/>
         </div>
 
         <button class="btn btn-primary btn-lock">Submit</button>
@@ -35,8 +35,8 @@ export default {
   },
   methods: {
     async handleReg () {
-      var app = this
-      var failed = false
+      const app = this
+      // var failed = false
       if (this.name !== '' && this.email !== '' && this.password !== '') {
         await axios.post('http://127.0.0.1:5000/user', {
           name: this.name,
@@ -45,16 +45,14 @@ export default {
         }).catch(function (e) {
           if (e.response != null) {
             const error = Object.values(e.response.data)[0][0]
-            failed = true
+            // failed = true
             app.$store.dispatch('flashed', { message: error, success: false })
           } else {
             app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
           }
         }).then(function (response) {
-          if (!failed) {
-            app.$store.dispatch('flashed', { message: response.data.message, success: true })
-            this.$router.push('/login')
-          }
+          app.$store.dispatch('flashed', { message: response.data.message, success: true })
+          app.$router.push('/login')
         })
       }
     }
