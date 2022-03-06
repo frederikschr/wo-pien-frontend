@@ -3,7 +3,7 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     user: null,
-    flashed: { message: 'This is a test!', success: true },
+    flashed: { message: 'Welcome to Wo Pien!', success: true },
     sessions: [
       {
         name: 'Test'

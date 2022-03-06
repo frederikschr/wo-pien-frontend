@@ -27,13 +27,13 @@
         </div>
 
         <div>
-          <label>People</label>
+          <label>Members</label>
           <div class="input-group">
-            <input type="text" v-model="person" class="form-control" id="people-field" maxlength="20"/>
-            <button @click="addPerson()" class="btn btn-primary btn-lock">Add</button>
+            <input type="text" v-model="person" class="form-control" id="members-field" maxlength="20"/>
+            <button type="button" @click="addPerson()" class="btn btn-primary btn-lock">Add</button>
           </div>
-          <b>People</b>
-          <div class="person" v-for="person in people" :key="person">
+          <b>Members</b>
+          <div class="person" v-for="person in members" :key="person">
             {{ person }}
             <button class="del-person" v-if="person != this.user.username" @click="delPerson(person)">x</button>
           </div>
@@ -58,60 +58,63 @@ export default {
       name: '',
       desciption: '',
       address: '',
-      date: null,
-      time: null,
+      date: '',
+      time: '',
       person: '',
-      people: []
+      members: []
     }
   },
   created () {
     if (this.$store.state.user == null) {
       this.$router.push('/')
     } else {
-      this.people.push(this.user.username)
+      this.members.push(this.user.username)
     }
   },
   methods: {
     async handleCreate () {
-      const app = this
-      var failed = false
-      await axios.post('http://127.0.0.1:5000/session/create', {
-        name: this.name,
-        desciption: this.desciption,
-        address: this.address,
-        date: this.date,
-        time: this.time,
-        people: this.people
-      }).catch(function (e) {
-        failed = true
-        if (e.response != null) {
-          app.$store.dispatch('flashed', { message: e.response.data.error, success: false })
-        } else {
-          app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
-        }
-      }).then(function (response) {
-        if (!failed) {
-          app.$store.dispatch('flashed', { message: 'Created', success: true })
-          app.$$router.push('/')
-        }
-      })
+      if (this.name !== '' && this.address !== '' && this.date !== '' && this.time !== '' && this.members.length > 1) {
+        const app = this
+        var failed = false
+        await axios.post('/session', {
+          name: this.name,
+          description: this.desciption,
+          address: this.address,
+          date: this.date,
+          time: this.time,
+          members: this.members
+        }).catch(function (e) {
+          if (e.response != null) {
+            const error = Object.values(e.response.data)[0][0]
+            failed = true
+            app.$store.dispatch('flashed', { message: error, success: false })
+          } else {
+            app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
+          }
+        }).then(function () {
+          if (!failed) {
+            app.$store.dispatch('flashed', { message: 'Successfully created ' + app.name, success: true })
+            app.$router.push('/')
+          }
+        })
+      }
     },
     addPerson () {
       if (this.person !== '') {
-        for (var i = 0; i < this.people.length; i++) {
-          if (this.people[i] === this.person) {
+        for (var i = 0; i < this.members.length; i++) {
+          if (this.members[i] === this.person) {
             this.person = ''
             return false
           }
         }
-        this.people.push(this.person)
+        this.members.push(this.person)
         this.person = ''
       }
     },
     delPerson (person) {
-      for (var i = 0; i < this.people.length; i++) {
-        if (this.people[i] === person) {
-          this.people.splice(i, 1)
+      for (var i = 0; i < this.members.length; i++) {
+        if (this.members[i] === person) {
+          this.members.splice(i, 1)
         }
       }
     }
@@ -151,7 +154,7 @@ textarea {
   margin-top: 2em;
 }
 
-#people-field {
+#members-field {
   width: 50%;
 }
 

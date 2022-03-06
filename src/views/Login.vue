@@ -33,7 +33,7 @@ export default {
     async handleLog () {
       if (this.name !== '' && this.password !== '') {
         const app = this
-        await axios.get('http://127.0.0.1:5000/user', {
+        await axios.get('user', {
           params: {
             name: this.name,
             password: this.password
@@ -45,7 +45,8 @@ export default {
             app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
           }
         }).then(function (response) {
-          // localStorage.setItem('token', respone.data.token)
+          console.log(response.data.token)
+          localStorage.setItem('token', response.data.token)
           app.$store.dispatch('user', response.data.user)
           app.$store.dispatch('flashed', { message: 'Logged in successfully', success: true })
         })

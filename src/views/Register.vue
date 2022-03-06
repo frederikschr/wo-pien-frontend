@@ -36,23 +36,25 @@ export default {
   methods: {
     async handleReg () {
       const app = this
-      // var failed = false
+      var failed = false
       if (this.name !== '' && this.email !== '' && this.password !== '') {
-        await axios.post('http://127.0.0.1:5000/user', {
+        await axios.post('/user', {
           name: this.name,
           email: this.email,
           password: this.password
         }).catch(function (e) {
           if (e.response != null) {
             const error = Object.values(e.response.data)[0][0]
-            // failed = true
+            failed = true
             app.$store.dispatch('flashed', { message: error, success: false })
           } else {
             app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
           }
         }).then(function (response) {
-          app.$store.dispatch('flashed', { message: response.data.message, success: true })
-          app.$router.push('/login')
+          if (!failed) {
+            app.$store.dispatch('flashed', { message: response.data.message, success: true })
+            app.$router.push('/login')
+          }
         })
       }
     }
