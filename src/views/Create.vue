@@ -84,10 +84,15 @@ export default {
           time: this.time,
           members: this.members
         }).catch(function (e) {
+          failed = true
           if (e.response != null) {
-            const error = Object.values(e.response.data)[0][0]
-            failed = true
-            app.$store.dispatch('flashed', { message: error, success: false })
+            if (e.response.status === 401) {
+              app.$store.dispatch('user', null)
+              app.$router.push('/')
+            } else {
+              const error = Object.values(e.response.data)[0][0]
+              app.$store.dispatch('flashed', { message: error, success: false })
+            }
           } else {
             app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
           }

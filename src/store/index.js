@@ -4,14 +4,7 @@ export default createStore({
   state: {
     user: null,
     flashed: { message: 'Welcome to Wo Pien!', success: true },
-    sessions: [
-      {
-        name: 'Test'
-      },
-      {
-        name: 'Test2'
-      }
-    ]
+    sessions: null
   },
   mutations: {
     user (state, user) {
@@ -19,6 +12,9 @@ export default createStore({
     },
     flashed (state, flashed) {
       state.flashed = flashed
+    },
+    sessions (state, sessions) {
+      state.sessions = sessions
     }
   },
   actions: {
@@ -27,18 +23,20 @@ export default createStore({
     },
     flashed (context, flashed) {
       context.commit('flashed', flashed)
+    },
+    sessions (context, sessions) {
+      context.commit('sessions', sessions)
     }
   },
   getters: {
     user: (state) => {
       return state.user
     },
-    sessions: (state) => {
-      return state.sessions
-    },
     flashed: (state) => {
       return state.flashed
+    },
+    sessions: (state) => {
+      return state.sessions
     }
-
   }
 })

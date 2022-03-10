@@ -16,14 +16,16 @@
           <input class="form-control rounded-0 py-2" type="search" id="example-search-input" placeholder="Search...">
       </div>
       <div>
-        <button><router-link to="/create-session">Starten</router-link></button>
+        <button><router-link class="routers" to="/create-session">Starten</router-link></button>
       </div>
       </div>
       <div class="sessions">
         <ul>
           <li v-for="session in sessions" :key="session.name">
-            <div class="session">
+            <div @click="loadPage(session.id)" class="session">
               <h2>{{ session.name }}</h2>
+              <p>{{ session.owner.username }}</p>
+              <hr>
             </div>
           </li>
         </ul>
@@ -33,6 +35,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import HelloWorld from '@/components/HelloWorld.vue'
 
 import { mapGetters } from 'vuex'
@@ -43,9 +46,22 @@ export default {
     HelloWorld
   },
   async created () {
+    const app = this
     // const response = await axios.get('user')
     // this.$store.dispatch('user', response.data.user)
-    console.log('created')
+    if (this.user != null) {
+      await axios.get('/session'
+      ).catch(function (e) {
+        console.log(e)
+      }).then(function (response) {
+        app.$store.dispatch('sessions', response.data.sessions)
+      })
+    }
+  },
+  methods: {
+    loadPage (session) {
+      console.log(session)
+    }
   },
   computed: {
     ...mapGetters(['user', 'sessions'])
@@ -70,11 +86,14 @@ export default {
 
 .home .directions button{
   margin: 80px 50px;
+}
+
+.routers {
   text-decoration: none;
   color: white;
 }
 
-.home .directions button:hover {
+.home button:hover {
   background-color: rgba(0, 136, 169, 0.8);
 }
 
@@ -100,9 +119,15 @@ input {
 
 .sessions {
   position: relative;
-  padding-top: 2em;
-  width: 50%;
-  left: 25%;
+  padding-top: 1em;
+  width: 75%;
+  margin: 0 auto;
+}
+
+hr {
+  border-top: 4px solid rgba(0, 136, 169, 1);
+  border-radius: 5px;
+  margin: auto 0;
 }
 
 .sessions li {
@@ -110,16 +135,15 @@ input {
 }
 
 .session {
-  border: 2px solid rgb(0, 136, 169);
+  /*border: 2px solid rgb(0, 136, 169);*/
   padding: 1em 0;
 }
 
-.sessions h2, p {
+.sessions h2, h3, p {
   color: black;
 }
 
  @media only screen and (max-width: 700px) {
-
    .home .directions button {
      margin: 80px 2em;
    }

@@ -45,7 +45,6 @@ export default {
             app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
           }
         }).then(function (response) {
-          console.log(response.data.token)
           localStorage.setItem('token', response.data.token)
           app.$store.dispatch('user', response.data.user)
           app.$store.dispatch('flashed', { message: 'Logged in successfully', success: true })

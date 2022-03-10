@@ -43,9 +43,9 @@ export default {
           email: this.email,
           password: this.password
         }).catch(function (e) {
+          failed = true
           if (e.response != null) {
             const error = Object.values(e.response.data)[0][0]
-            failed = true
             app.$store.dispatch('flashed', { message: error, success: false })
           } else {
             app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
