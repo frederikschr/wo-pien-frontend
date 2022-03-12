@@ -10,14 +10,17 @@
     </div>
 
     <div v-else class="base">
-      <h1>Welcome {{ user.username }}</h1>
+      <h1>Welcome {{ user.username }}!</h1>
       <div class="header">
+        <!--
         <div>
           <input class="form-control rounded-0 py-2" type="search" id="example-search-input" placeholder="Search...">
-      </div>
-      <div>
-        <button><router-link class="routers" to="/create-session">Starten</router-link></button>
-      </div>
+        </div>
+        -->
+        <div>
+          <button><router-link class="routers" to="/create-session">Create</router-link></button>
+          <button><router-link class="routers" to="/invites">Invites</router-link></button>
+        </div>
       </div>
       <div class="sessions">
         <ul>
@@ -47,14 +50,21 @@ export default {
   },
   async created () {
     const app = this
+    var failed = false
     // const response = await axios.get('user')
     // this.$store.dispatch('user', response.data.user)
     if (this.user != null) {
-      await axios.get('/session'
-      ).catch(function (e) {
+      await axios.get('/session', {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      }).catch(function (e) {
+        failed = true
         console.log(e)
       }).then(function (response) {
-        app.$store.dispatch('sessions', response.data.sessions)
+        if (!failed) {
+          app.$store.dispatch('sessions', response.data.sessions)
+        }
       })
     }
   },
@@ -109,12 +119,11 @@ input {
 .header {
   padding-top: 2em;
   display: grid;
-  grid-template-columns: 50% 50%;
   grid-gap: 1em;
 }
 
-.header div {
-  padding: 0 1em;
+.header button {
+  margin: 1em;
 }
 
 .sessions {
@@ -122,6 +131,11 @@ input {
   padding-top: 1em;
   width: 75%;
   margin: 0 auto;
+}
+
+.sessions ul {
+  list-style: none;
+  padding: 0;
 }
 
 hr {

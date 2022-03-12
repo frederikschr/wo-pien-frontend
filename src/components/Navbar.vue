@@ -33,6 +33,10 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'Navbar',
+  created () {
+    this.$store.dispatch('user', null)
+    localStorage.removeItem('token')
+  },
   methods: {
     toggleMenu () {
       var menu = document.getElementById('nav-links')
