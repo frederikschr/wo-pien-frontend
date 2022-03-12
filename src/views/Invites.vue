@@ -42,8 +42,25 @@ export default {
     }
   },
   methods: {
-    handleInvite (session, accepted) {
-      console.log(session + ' ' + accepted)
+    async handleInvite (session, accepted) {
+      // const app = this
+      var failed = false
+      await axios.patch('/session', {
+        session: session,
+        accepted: accepted
+      },
+      {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      }).catch(function (e) {
+        failed = true
+        console.log(e)
+      }).then(function (response) {
+        if (!failed) {
+          console.log(response.data)
+        }
+      })
     }
   }
 }

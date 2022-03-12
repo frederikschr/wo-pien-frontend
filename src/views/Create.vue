@@ -76,6 +76,7 @@ export default {
       if (this.name !== '' && this.address !== '' && this.date !== '' && this.time !== '' && this.members.length > 1) {
         const app = this
         var failed = false
+        console.log(localStorage.getItem('token'))
         await axios.post('/session', {
           name: this.name,
           description: this.desciption,
@@ -83,6 +84,11 @@ export default {
           date: this.date,
           time: this.time,
           members: this.members
+        },
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+          }
         }).catch(function (e) {
           failed = true
           if (e.response != null) {
