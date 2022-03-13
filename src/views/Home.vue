@@ -22,7 +22,7 @@
           <button><router-link class="routers" to="/invites">Invites</router-link></button>
         </div>
       </div>
-      <div class="sessions">
+      <div class="sessions" v-if="sessions.length !== 0">
         <ul>
           <li v-for="session in sessions" :key="session.name">
             <div @click="loadPage(session.id)" class="session">
@@ -33,6 +33,7 @@
           </li>
         </ul>
       </div>
+      <h2 v-else>There are currently no sessions</h2>
    </div>
   </div>
 </template>
@@ -51,8 +52,6 @@ export default {
   async created () {
     const app = this
     var failed = false
-    // const response = await axios.get('user')
-    // this.$store.dispatch('user', response.data.user)
     if (this.user != null) {
       await axios.get('/session', {
         headers: {
@@ -60,7 +59,12 @@ export default {
         }
       }).catch(function (e) {
         failed = true
-        console.log(e)
+        if (e.response.status === 401) {
+          app.$store.dispatch('user', null)
+          app.$router.push('/')
+        } else {
+          console.log(e)
+        }
       }).then(function (response) {
         if (!failed) {
           app.$store.dispatch('sessions', response.data.sessions)
@@ -155,6 +159,10 @@ hr {
 
 .sessions h2, h3, p {
   color: black;
+}
+
+h2 {
+  margin-top: 1em;
 }
 
  @media only screen and (max-width: 700px) {
