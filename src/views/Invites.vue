@@ -94,7 +94,7 @@ export default {
 }
 
 .invites ul {
-  padding: 3em 2em;
+  padding: 2em;
   list-style-type: none;
 }
 

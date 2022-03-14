@@ -26,18 +26,33 @@
             <input type="time" class="form-control" v-model="time" placeholder="Enter date" min="2022-03-01" max="2023-01-01"/>
         </div>
 
-        <div>
+        <div class="form-goup">
           <label>Members</label>
           <div class="input-group">
             <input type="text" v-model="person" class="form-control" id="members-field" maxlength="20"/>
             <button type="button" @click="addPerson()" class="btn btn-primary btn-lock">Add</button>
           </div>
           <b>Members</b>
-          <div class="person" v-for="person in members" :key="person">
-            {{ person }}
-            <button class="del-person" v-if="person != this.user.username" @click="delPerson(person)">x</button>
+
+          <div id="people" style="overflow-y: scroll; height:10em;">
+            <div class="person" v-for="person in members" :key="person">
+              {{ person }}
+              <button class="del-person" v-if="person != this.user.username" @click="delPerson(person)"><i class="fa fa-close" style="color: red"></i></button>
+            </div>
           </div>
 
+          <label style="margin-top: 1em;">Groups</label>
+          <div class="groups">
+            <div class="group" v-for="group in groups" :key="group">
+              <button class="add-group" @click="addGroup(group)">{{ group.name }}</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="items">
+            <label>Items</label>
+          </div>
         </div>
 
         <button class="btn btn-primary btn-lock" id="submit">Create</button>
@@ -119,6 +134,8 @@ export default {
         }
         this.members.push(this.person)
         this.person = ''
+        var people = document.getElementById('people')
+        people.scrollTop = people.scrollHeight
       }
     },
     delPerson (person) {
@@ -127,10 +144,17 @@ export default {
           this.members.splice(i, 1)
         }
       }
+    },
+    addGroup (group) {
+      for (var i = 0; i < group.members.length; i++) {
+        if (!this.members.includes(group.members[i])) {
+          this.members.push(group.members[i])
+        }
+      }
     }
   },
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user', 'groups'])
   }
 }
 </script>
@@ -177,15 +201,28 @@ textarea {
     cursor: pointer;
     color: red;
     background-color: white;
+    float: right;
 }
 
-.del-person:hover {
-  font-size: 1.5em;
+.group {
+  display: inline-block;
+  margin-right: 1em;
+}
+
+.add-group {
+  padding: .7em 0.6em;
+  font-size: .9em;
+  margin-top: 1em;
+}
+
+.items {
+  margin-top: 2em;
 }
 
 @media only screen and (max-width: 700px) {
     .create {
         margin: 25% auto;
+        width: 75%;
     }
 }
 

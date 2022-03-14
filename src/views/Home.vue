@@ -92,14 +92,12 @@ export default {
   margin: 5% auto;
 }
 
-.home .directions {
-  display: flex;
-  justify-content: center;
-  align-content: space-between;
+ .directions {
+  margin: auto 0;
 }
 
-.home .directions button{
-  margin: 80px 50px;
+.directions button{
+  margin: 5em 3em;
 }
 
 .routers {
@@ -166,17 +164,22 @@ h2 {
 }
 
  @media only screen and (max-width: 700px) {
-   .home .directions button {
-     margin: 80px 2em;
+   .hello button {
+     padding: 2em 5em;
+     font-size: .3em;
    }
 
-   .hello button {
-     padding: 2px 30px;
+   .directions {
+     margin-top: 5em;
    }
 
    .header button {
      margin-top: 1em;
      font-size: 1em;
+   }
+
+   h3 {
+     font-size: 1.2em;
    }
  }
 
