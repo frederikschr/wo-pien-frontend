@@ -29,7 +29,7 @@
         <div class="form-goup">
           <label>Members</label>
           <div class="input-group">
-            <input type="text" v-model="person" class="form-control" id="members-field" maxlength="20"/>
+            <input type="text" v-model="person" class="form-control" id="members-field" maxlength="20" placeholder="Enter username"/>
             <button type="button" @click="addPerson()" class="btn btn-primary btn-lock">Add</button>
           </div>
           <b>Members</b>
@@ -50,10 +50,21 @@
         </div>
 
         <div class="form-group">
-          <div class="items">
-            <label>Items</label>
+          <label style="margin-top: 2em">Items</label>
+          <div class="items-add">
+              <input id="item" type="text" class="form-control" maxlength="20" placeholder="Enter Item"/>
+              <input type="number" class="form-control" placeholder="Amount">
+              <button type="button" @click="addItem()" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%">Add</button>
           </div>
         </div>
+        <b>Items</b>
+
+        <div class="items" style="overflow-y: scroll; height:10em;">
+            <div class="person" v-for="person in members" :key="person">
+              {{ person }}
+              <button class="del-person" v-if="person != this.user.username" @click="delPerson(person)"><i class="fa fa-close" style="color: red"></i></button>
+            </div>
+          </div>
 
         <button class="btn btn-primary btn-lock" id="submit">Create</button>
 
@@ -76,8 +87,13 @@ export default {
       date: '',
       time: '',
       person: '',
-      members: []
+      members: [],
+      value: null
+
     }
+  },
+  components: {
+    // Button
   },
   created () {
     if (this.$store.state.user == null) {
@@ -215,8 +231,14 @@ textarea {
   margin-top: 1em;
 }
 
-.items {
-  margin-top: 2em;
+#item {
+  width: 50%
+}
+
+.items-add input {
+  display: inline-block;
+  width: 15%;
+  margin-right: 10%;
 }
 
 @media only screen and (max-width: 700px) {
@@ -224,6 +246,12 @@ textarea {
         margin: 25% auto;
         width: 75%;
     }
+
+    .items-add input {
+      margin-right: 5%;
+      width: 20%;
+    }
+
 }
 
 </style>
