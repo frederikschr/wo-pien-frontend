@@ -52,19 +52,29 @@
         <div class="form-group">
           <label style="margin-top: 2em">Items</label>
           <div class="items-add">
-              <input id="item" type="text" class="form-control" maxlength="20" placeholder="Enter Item"/>
-              <input type="number" class="form-control" placeholder="Amount">
+              <input id="item" v-model='item_name' type="text" class="form-control" maxlength="20" placeholder="Enter Item"/>
+              <input type="number" v-model='item_amount' class="form-control" placeholder="Amount">
               <button type="button" @click="addItem()" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%">Add</button>
           </div>
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" style="margin: 1em;">
+          <label class="form-check-label" for="flexCheckDefault" style="margin: 1em; color: rgb(0, 136, 169)">
+             Host
+          </label>
         </div>
-        <b>Items</b>
+        <b>Item</b> <b style="position: absolute; left: 50%;">Amount</b>
 
         <div class="items" style="overflow-y: scroll; height:10em;">
-            <div class="person" v-for="person in members" :key="person">
-              {{ person }}
-              <button class="del-person" v-if="person != this.user.username" @click="delPerson(person)"><i class="fa fa-close" style="color: red"></i></button>
-            </div>
-          </div>
+            <div class="item" v-for="item in items" :key="item" style="color: black">
+                <p v-if="item.byHost === true" style="display: inline-block; width: 50%; word-break: break-word; color: rgb(0, 136, 169)">{{ item.name }}</p>
+                <p v-if="item.byHost === true" style="display: inline-block; position: relative; left: 5%; color: rgb(0, 136, 169)">{{ item.amount }}</p>
+
+                <p v-if="item.byHost === false" style="display: inline-block; width: 50%; word-break: break-word">{{ item.name }}</p>
+                <p v-if="item.byHost === false" style="display: inline-block; position: relative; left: 5%">{{ item.amount }}</p>
+
+              <button class="del-item" @click="delItem(item)"><i class="fa fa-close" style="color: red;"></i></button>
+
+           </div>
+        </div>
 
         <button class="btn btn-primary btn-lock" id="submit">Create</button>
 
@@ -88,12 +98,10 @@ export default {
       time: '',
       person: '',
       members: [],
-      value: null
-
+      item_name: '',
+      item_amount: 1,
+      items: []
     }
-  },
-  components: {
-    // Button
   },
   created () {
     if (this.$store.state.user == null) {
@@ -113,7 +121,8 @@ export default {
           address: this.address,
           date: this.date,
           time: this.time,
-          members: this.members
+          members: this.members,
+          items: this.items
         },
         {
           headers: {
@@ -143,7 +152,7 @@ export default {
     addPerson () {
       if (this.person !== '') {
         for (var i = 0; i < this.members.length; i++) {
-          if (this.members[i] === this.person) {
+          if (this.members[i].split(' ').join('') === this.person.split(' ').join('')) {
             this.person = ''
             return false
           }
@@ -165,6 +174,28 @@ export default {
       for (var i = 0; i < group.members.length; i++) {
         if (!this.members.includes(group.members[i])) {
           this.members.push(group.members[i])
+        }
+      }
+    },
+    addItem () {
+      if (this.item_name !== '' && this.item_amount > 0) {
+        for (var i = 0; i < this.items.length; i++) {
+          if (this.items[i].name.split(' ').join('') === this.item_name.split(' ').join('')) {
+            this.item_name = ''
+            return false
+          }
+        }
+        var byHost = document.getElementById('flexCheckDefault')
+        this.items.push({ name: this.item_name.trim(), amount: this.item_amount, byHost: byHost.checked })
+        this.item_name = ''
+        this.item_amount = 1
+        byHost.checked = false
+      }
+    },
+    delItem (item) {
+      for (var i = 0; i < this.items.length; i++) {
+        if (this.items[i] === item) {
+          this.items.splice(i, 1)
         }
       }
     }
@@ -208,12 +239,12 @@ textarea {
   width: 50%;
 }
 
-.person {
+.person, .item {
   padding: 1em;
   height: 3em;
 }
 
-.del-person {
+.del-person, .del-item {
     cursor: pointer;
     color: red;
     background-color: white;
@@ -239,6 +270,11 @@ textarea {
   display: inline-block;
   width: 15%;
   margin-right: 10%;
+}
+
+td {
+  padding: 2em;
+  background: red;
 }
 
 @media only screen and (max-width: 700px) {
