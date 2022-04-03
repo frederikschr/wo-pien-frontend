@@ -4,6 +4,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Create from '../views/Create.vue'
 import Invites from '../views/Invites.vue'
+import Session from '../views/Session.vue'
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/invites',
     name: 'Invites',
     component: Invites
+  },
+  {
+    path: '/view-session/:id',
+    name: 'Session',
+    component: Session
   }
 ]
 

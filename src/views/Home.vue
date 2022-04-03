@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     loadPage (session) {
-      console.log(session)
+      this.$router.push('/view-session/' + session)
     }
   },
   computed: {
