@@ -115,7 +115,7 @@ header {
    text-decoration: none;
  }
 
-.routers-nav:hover {
+.routers-nav:hover, .router-link-active {
     transition: .3s;
     color: rgba(0, 136, 169, 1);
 }
@@ -166,6 +166,11 @@ button {
       background-color: rgba(0, 136, 169, 0.8);
       transition: 1s;
     }
+
+    .router-link-active {
+      color: white;
+    }
+
     .nav-links li{
         display: block;
         margin-top: 3%;

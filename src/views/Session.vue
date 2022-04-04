@@ -1,6 +1,6 @@
 <template>
   <div class="view-session">
-    <div class="header">
+    <div class="basic">
       <h1>{{ session.name }}</h1>
       <p>{{ session.description }}</p>
     </div>
@@ -18,6 +18,18 @@
       <b>Accepted:</b><p v-for="member in session.members" :key="member.id">{{ member.username }}</p><br>
       <b>Invited:</b><p v-for="invited in session.invited" :key="invited.id">{{ invited.username }}</p><br>
       <u>Total:</u><p>{{ session.invited.length + session.members.length }}</p>
+    </div>
+    <hr>
+    <label><i>Items</i></label>
+    <div class="items">
+      <b>Bought by Host:</b><br>
+      <div v-for="item in session.items" :key="item.id">
+        <p>{{ item.name }} {{ item.amount }}</p>
+        <label>Price (PU)</label>
+        <input v-if="user.id === session.owner.id" class="form-control" type="number" placeholder="Enter cost" style="width: 40%; display: inline-block;">
+        <br>
+      </div>
+      <br>
     </div>
   </div>
 </template>
@@ -76,12 +88,12 @@ export default {
 
 <style>
 .view-session {
-  width: 70%;
+  width: 50%;
   margin: 5% auto;
   overflow-wrap: break-word;
 }
 
-.header {
+.basic {
   text-align: center;
 }
 
@@ -91,7 +103,7 @@ hr {
   margin: auto 0;
 }
 
-.general, .people {
+.general, .people, .items {
   margin-top: 5%;
 }
 
@@ -103,6 +115,7 @@ hr {
 @media only screen and (max-width: 700px) {
     .view-session {
         margin: 25% auto;
+        width: 70%;
     }
 }
 
