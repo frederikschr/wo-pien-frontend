@@ -61,6 +61,7 @@
              Host
           </label>
         </div>
+        <!--
         <b>Item</b> <b style="position: absolute; left: 50%;">Amount</b>
 
         <div class="items" style="overflow-y: scroll; height:10em;">
@@ -74,6 +75,27 @@
               <button class="del-item" @click="delItem(item)"><i class="fa fa-close" style="color: red;"></i></button>
 
            </div>
+        </div>
+        -->
+
+        <div class="items">
+          <table class="items-table">
+            <thead>
+              <tr>
+                <td><b>Item</b></td>
+                <td align="center"><b>Amount</b> </td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="item" v-for="item in items" :key="item" style="color: black">
+                <td v-if="!item.byHost">{{ item.name }}</td>
+                <td v-if="!item.byHost" align="center">{{ item.amount }}</td>
+                <td v-if="item.byHost" style="color: rgba(0, 136, 169, 1)">{{ item.name }}</td>
+                <td v-if="item.byHost" align="center" style="color: rgba(0, 136, 169, 1)">{{ item.amount }}</td>
+                <button class="del-item" @click="delItem(item)"><i class="fa fa-close" style="color: red;"></i></button>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <button class="btn btn-primary btn-lock" id="submit">Create</button>
@@ -239,7 +261,7 @@ textarea {
   width: 50%;
 }
 
-.person, .item {
+.person {
   padding: 1em;
   height: 3em;
 }
@@ -249,6 +271,10 @@ textarea {
     color: red;
     background-color: white;
     float: right;
+}
+
+#item {
+  width: 50%;
 }
 
 .group {
@@ -262,19 +288,29 @@ textarea {
   margin-top: 1em;
 }
 
-#item {
-  width: 50%
-}
-
 .items-add input {
   display: inline-block;
   width: 15%;
   margin-right: 10%;
 }
 
-td {
-  padding: 2em;
-  background: red;
+.items {
+  height: 10em;
+  overflow-y: scroll;
+}
+
+.items-table {
+  width: 100%;
+  table-layout: fixed;
+  overflow-wrap: break-word;
+}
+
+.items-table td:first-child {
+  width: 50%;
+}
+
+.items-table td:nth-child(2) {
+  width: 25%;
 }
 
 @media only screen and (max-width: 700px) {
