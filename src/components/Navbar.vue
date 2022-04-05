@@ -6,7 +6,7 @@
               <h1>WOPIEN</h1>
               <nav>
                     <ul class="nav-links" id="nav-links">
-                        <li v-if="user"><router-link class="routers-nav" id="logout" to="/" @click="logout()">Logout</router-link></li>
+                        <li v-if="user"><router-link class="routers-nav" id="logout" to="/logout" @click="logout()">Logout</router-link></li>
                         <li v-if="!user"><router-link class="routers-nav" to="login">Login</router-link></li>
                         <li v-if="!user"><router-link class="routers-nav" to="register">Sign up</router-link></li>
                         <li><router-link class="routers-nav" to="/">Home</router-link></li>
@@ -59,8 +59,6 @@ export default {
       }
     },
     logout () {
-      this.$store.state.user = null
-      localStorage.removeItem('token')
       if (screen.width < 700) {
         this.toggleMenu()
       }
