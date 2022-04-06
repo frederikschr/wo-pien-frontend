@@ -23,8 +23,8 @@
       <hr>
       <label><i>Items</i></label><br><br>
       <b>Bought by Host:</b><br>
-      <div class="items">
-        <table class="owner-items">
+      <div class="items" style="height: 20em;">
+        <table class="owner-items" v-if="session.items_by_host.length != 0">
           <thead>
             <tr>
               <td>Item</td>
@@ -33,14 +33,20 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in session.items" :key="item">
+            <tr v-for="item in session.items_by_host" :key="item">
               <td>{{ item.name }}</td>
               <td>{{ item.amount }}</td>
-              <td><input v-model="item.price" type="number" class="form-control" placeholder="Cost"></td>
+              <td v-if="user.id === session.owner.id"><input v-model="item.price" type="text" class="form-control" maxlength="6" placeholder="Cost"></td>
+              <td v-else>{{ item.price }}</td>
             </tr>
-          </tbody>
-        </table>
-        <br>
+          </tbody><br>
+          <tfoot>
+            <tr>
+              <td colspan="2">Total</td>
+              <td>{{ getTotalPrice }}€</td>
+            </tr>
+          </tfoot>
+        </table><br>
       </div>
 
       <button class="btn btn-primary btn-lock" id="update">Update</button>
@@ -66,7 +72,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['user', 'sessions'])
+    ...mapGetters(['user', 'sessions']),
+    getTotalPrice () {
+      var total = 0
+      for (var i = 0; i < this.session.items_by_host.length; i++) {
+        var item = this.session.items_by_host[i]
+        if (item.price >= 0) {
+          total += item.price * item.amount
+        }
+      }
+      return parseFloat(total.toString().slice(0, 6))
+    }
   },
   methods: {
     userInSession () {
@@ -154,6 +170,16 @@ label {
   text-align: center;
   border-right: 3px solid rgba(0, 136, 169, .3);
   overflow-wrap: break-word;
+}
+
+.owner-items tfoot td:first-child {
+  border-top: 3px dashed rgba(0, 136, 169, .3);
+  border-right: none;
+  text-align: right;
+}
+
+.owner-items tfoot td:last-child {
+  border-top: 3px dashed rgba(0, 136, 169, .3);
 }
 
 .owner-items td:first-child {
