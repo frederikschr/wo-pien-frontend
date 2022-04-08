@@ -22,31 +22,82 @@
       </div>
       <hr>
       <label><i>Items</i></label><br><br>
-      <b>Bought by Host:</b><br>
-      <div class="items" style="height: 20em;">
-        <table class="owner-items" v-if="session.items_by_host.length != 0">
-          <thead>
-            <tr>
-              <td>Item</td>
-              <td align="center">QTY</td>
-              <td align="center">P / U</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in session.items_by_host" :key="item">
-              <td>{{ item.name }}</td>
-              <td>{{ item.amount }}</td>
-              <td v-if="user.id === session.owner.id"><input v-model="item.price" type="text" class="form-control" maxlength="6" placeholder="Cost"></td>
-              <td v-else>{{ item.price }}</td>
-            </tr>
-          </tbody><br>
-          <tfoot>
-            <tr>
-              <td colspan="2">Total</td>
-              <td>{{ getTotalPrice }}€</td>
-            </tr>
-          </tfoot>
-        </table><br>
+      <b>Items</b><br>
+      <div class="session-items">
+        <!--
+        <div id="owner-items" style="height: 10em; overflow-y: scroll;">
+          <table class="owner-items" v-if="session.items_by_host.length != 0" style="height: 10em; overflow-y: scroll;">
+            <thead>
+              <tr>
+                <td>Item</td>
+                <td align="center">QTY</td>
+                <td align="center">P / U</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in session.items_by_host" :key="item">
+                <td>{{ item.name }}</td>
+                <td v-if="user.id === session.owner.id"><input type="number" min="1" max="100" v-model="item.amount" class="form-control"></td>
+                <td v-else>{{ item.amount }}</td>
+                <td v-if="user.id === session.owner.id"><input v-model="item.price" type="text" class="form-control" maxlength="6" placeholder="Cost"></td>
+                <td v-else>{{ item.price }}</td>
+              </tr>
+            </tbody><br>
+            <tfoot>
+              <tr>
+                <td colspan="2">Total</td>
+                <td>{{ getTotalPrice }}€</td>
+              </tr>
+            </tfoot>
+          </table><br>
+        </div>
+
+        <b>Can be brought:</b><br>
+        <div id="guest-items" style="height: 10em; overflow-y: scroll;">
+          <table class="guest-items">
+            <thead>
+              <tr>
+                <td>Item</td>
+                <td>Left</td>
+                <td>Amount</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in session.items_by_members" :key="item">
+                <td>{{ item.name }}</td>
+                <td>{{ item.amount_brought}} / {{ item.amount }}</td>
+                <td><input type="number" min="1" max="item.amount - item.amount_brought" class="form-control"></td>
+              </tr>
+            </tbody>
+          </table>
+          -->
+          <table class="items">
+            <thead>
+              <tr>
+                <td>Item</td>
+                <td align="center">QTY</td>
+                <td align="center">Bring</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in session.items" :key="item">
+                <td v-if="!item.byHost">{{ item.name }}</td>
+                <td v-else style="color: rgba(0, 136, 169, 1);">{{ item.name }}</td>
+                <td v-if="user.id === session.owner.id && !item.byHost"><p style="display: inline-block;">{{ item.amount_brought }} / </p> <input style="display: inline-block; width: 50%;" type="number" min="1" max="100" v-model="item.amount" class="form-control"></td>
+                <td v-else-if="user.id === session.owner.id && item.byHost"><p style="display: inline-block; color: rgba(0, 136, 169, 1);">{{ item.amount_brought }} / </p> <input style="display: inline-block; width: 50%;" type="number" min="1" max="100" v-model="item.amount" class="form-control"></td>
+                <td v-else-if="user.id !== session.owner && !item.byHost">{{ item.amount_brought }} / {{ item.amount }}</td>
+                <td v-else style="color: rgba(0, 136, 169, 1);">{{ item.amount_brought }} / {{ item.amount }}</td>
+                <td v-if="!item.byHost || user.id == session.owner.id"><input type="number" min="1" max="100" v-model="item.amount" class="form-control"></td>
+                <td v-else style="color: rgba(0, 136, 169, 1)">X</td>
+              </tr>
+            </tbody><br>
+            <tfoot>
+              <tr>
+                <td colspan="2">Total</td>
+                <td>{{ getTotalPrice }}€</td>
+              </tr>
+            </tfoot>
+          </table>
       </div>
 
       <button class="btn btn-primary btn-lock" id="update">Update</button>
@@ -113,11 +164,35 @@ export default {
         app.session = response.data.session
       })
     },
-    handleUpdate () {
-      console.log('updated')
-      for (var i = 0; i < this.session.items.length; i++) {
-        console.log(this.session.items[i].price)
+    getUpdatedItems () {
+      var items = []
+      for (var i = 0; i < this.session.items_by_host.length; i++) {
+        items.push(this.session.items_by_host[i])
       }
+      return items
+    },
+    async handleUpdate () {
+      const app = this
+      await axios.patch('/item', {
+        updated_items: this.getUpdatedItems()
+      },
+      {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      }).catch(function (e) {
+        if (e.response.status === 401) {
+          app.$store.dispatch('user', null)
+          app.$router.push('/')
+        } else {
+          console.log(e)
+        }
+      }).then(function (response) {
+        console.log('it worked')
+      })
+    },
+    bringItem (item) {
+      console.log(item)
     }
   }
 }
@@ -153,18 +228,18 @@ label {
   margin-top: 5%;
 }
 
-.owner-items {
+.owner-items, .guest-items {
   width: 100%;
   margin-top: 5%;
   table-layout: fixed;
   border-radius: 20px;
 }
 
-.owner-items thead tr {
+.view-session table thead tr {
   border-bottom: 3px solid rgba(0, 136, 169, .3);
 }
 
-.owner-items td {
+.view-session table td {
   padding: .5em;
   background: none;
   text-align: center;
@@ -172,25 +247,25 @@ label {
   overflow-wrap: break-word;
 }
 
-.owner-items tfoot td:first-child {
+.view-session table tfoot td:first-child {
   border-top: 3px dashed rgba(0, 136, 169, .3);
   border-right: none;
   text-align: right;
 }
 
-.owner-items tfoot td:last-child {
+.view-session table tfoot td:last-child {
   border-top: 3px dashed rgba(0, 136, 169, .3);
 }
 
-.owner-items td:first-child {
+.view-session table td:first-child {
   width: 50%;
 }
 
-.owner-items td:nth-child(2) {
-  width: 20%;
+.view-session table td:nth-child(2) {
+  width: 35%;
 }
 
-.owner-items td:last-child {
+.view-session table td:last-child {
   border-right: none;
 }
 

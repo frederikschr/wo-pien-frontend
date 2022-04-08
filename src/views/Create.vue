@@ -61,22 +61,6 @@
              Host
           </label>
         </div>
-        <!--
-        <b>Item</b> <b style="position: absolute; left: 50%;">Amount</b>
-
-        <div class="items" style="overflow-y: scroll; height:10em;">
-            <div class="item" v-for="item in items" :key="item" style="color: black">
-                <p v-if="item.byHost === true" style="display: inline-block; width: 50%; word-break: break-word; color: rgb(0, 136, 169)">{{ item.name }}</p>
-                <p v-if="item.byHost === true" style="display: inline-block; position: relative; left: 5%; color: rgb(0, 136, 169)">{{ item.amount }}</p>
-
-                <p v-if="item.byHost === false" style="display: inline-block; width: 50%; word-break: break-word">{{ item.name }}</p>
-                <p v-if="item.byHost === false" style="display: inline-block; position: relative; left: 5%">{{ item.amount }}</p>
-
-              <button class="del-item" @click="delItem(item)"><i class="fa fa-close" style="color: red;"></i></button>
-
-           </div>
-        </div>
-        -->
 
         <div class="items">
           <table class="items-table">
