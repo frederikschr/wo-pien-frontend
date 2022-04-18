@@ -40,7 +40,7 @@
                 <td v-else-if="user.id === session.owner.id && item.byHost"><input style="width: 50%; text-align: center; margin: 0 auto;" type="number" v-model="item.amount" class="form-control"></td>
                 <td v-else-if="user.id !== session.owner && !item.byHost">{{ item.amount_brought }} / {{ item.amount }}</td>-->
                 <td>{{ item.amount_brought }} / {{ item.amount }}</td>
-                <td v-if="item.amount_brought !== item.amount && !item.byHost"><i @click="bringItem(item)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1)"></i></td>
+                <td v-if="item.amount_brought !== item.amount"><i @click="bringItem(item)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1)"></i></td>
                 <td v-else><i class="fa fa-close" style="color: red;"></i></td>
               </tr>
             </tbody><br>
