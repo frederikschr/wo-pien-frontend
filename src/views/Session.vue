@@ -24,31 +24,24 @@
       <label><i>Items</i></label><br><br>
       <b>Items</b><br>
       <div class="session-items">
-        <div style="height: 15em; overflow-y: scroll;">
+        <div style="height: 15 em; overflow-y: scroll;">
           <table class="items">
             <thead>
               <tr>
                 <td>Name</td>
                 <td align="center">QTY</td>
-                <td align="center">Bring</td>
               </tr>
             </thead>
             <tbody>
-                <tr v-for="item in session.items" :key="item">
-                <td v-if="!item.byHost">{{ item.name }}</td>
-                <td v-else style="color: rgba(0, 136, 169, 1);">{{ item.name }}</td>
+              <tr v-for="item in session.items" :key="item">
+                <td>{{ item.name }}</td>
 
-                <td v-if="user.id === session.owner.id && !item.byHost"><p style="display: inline-block;">{{ item.amount_brought }} / </p><input style="display: inline-block; width: 50%;" type="number" min="1" max="100" v-model="item.amount" class="form-control"></td>
+                <!--<td v-if="user.id === session.owner.id && !item.byHost"><p style="display: inline-block;">{{ item.amount_brought }} / </p><input style="display: inline-block; width: 50%;" type="number" min="1" max="100" v-model="item.amount" class="form-control"></td>
                 <td v-else-if="user.id === session.owner.id && item.byHost"><input style="width: 50%; text-align: center; margin: 0 auto;" type="number" v-model="item.amount" class="form-control"></td>
-                <td v-else-if="user.id !== session.owner && !item.byHost">{{ item.amount_brought }} / {{ item.amount }}</td>
-                <td v-else style="color: rgba(0, 136, 169, 1);">{{ item.amount }}</td>
-
-                <td v-if="item.already_brought !== item.amount && !item.byHost"><button type="button" @click="bringItem(item)" class="form-control">X</button></td>
-                <td v-else-if="item.byHost" style="color: rgba(0, 136, 169, 1);">X</td>
-                <!--
-                <td v-if="!item.byHost || user.id == session.owner.id"><input type="number" min="1" max="100" value="0" class="form-control"></td>
-                <td v-else style="color: rgba(0, 136, 169, 1)">X</td>
-                -->
+                <td v-else-if="user.id !== session.owner && !item.byHost">{{ item.amount_brought }} / {{ item.amount }}</td>-->
+                <td>{{ item.amount_brought }} / {{ item.amount }}</td>
+                <td v-if="item.amount_brought !== item.amount && !item.byHost"><i @click="bringItem(item)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1)"></i></td>
+                <td v-else><i class="fa fa-close" style="color: red;"></i></td>
               </tr>
             </tbody><br>
             <tfoot>
@@ -72,7 +65,8 @@
               <tbody>
                 <tr v-for="item in myItems" :key="item">
                   <td>{{ item.name }}</td>
-                  <td><input class="form-control" type="number" value="1" style="width: 50%; display: inline-block;"><p> / {{ item.amount - item.amount_brought }}</p></td>
+                  <td v-if="!item.already_existed"><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount - item.amount_brought }}</p></td>
+                  <td v-else><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount }}</p></td>
                   <td><button type="button" style="background: white; cursor: pointer;" @click="removeItem(item)"><i class="fa fa-close" style="color: red;"></i></button></td>
                 </tr>
               </tbody>
@@ -144,18 +138,22 @@ export default {
         }
       }).then(function (response) {
         app.session = response.data.session
+        app.myItems = app.session.my_items
+        for (var i = 0; i < app.myItems.length; i++) {
+          app.myItems[i].already_existed = true
+        }
       })
     },
     getUpdatedItems () {
       var items = []
-      for (var i = 0; i < this.session.items_by_host.length; i++) {
-        items.push(this.session.items_by_host[i])
+      for (var i = 0; i < this.myItems.length; i++) {
+        items.push(this.myItems[i])
       }
       return items
     },
     async handleUpdate () {
       const app = this
-      await axios.patch('/item', {
+      await axios.patch('/bring-items', {
         updated_items: this.getUpdatedItems()
       },
       {
@@ -170,15 +168,16 @@ export default {
           console.log(e)
         }
       }).then(function (response) {
-        console.log('it worked')
+        app.getSession()
       })
     },
     bringItem (item) {
       for (var i = 0; i < this.myItems.length; i++) {
-        if (this.myItems[i] === item) {
+        if (this.myItems[i].id === item.id) {
           return false
         }
       }
+      item.bring_amount = 1
       this.myItems.push(item)
     },
     removeItem (item) {
@@ -222,13 +221,6 @@ label {
   margin-top: 5%;
 }
 
-.owner-items, .guest-items {
-  width: 100%;
-  margin-top: 5%;
-  table-layout: fixed;
-  border-radius: 20px;
-}
-
 .view-session table {
   width: 100%;
 }
@@ -263,16 +255,16 @@ label {
   width: 35%;
 }
 
-.view-session table td:last-child {
-  border-right: none;
-}
-
-.view-session .myItems table td:nth-child(2) {
+.view-session table td:last-child, .myItems table td:nth-child(2) {
   border-right: none;
 }
 
 .view-session .myItems table thead tr:nth-child(2) {
   border-bottom: none;
+}
+
+.view-session .items tbody tr td:nth-child(2) {
+  border-right: none;
 }
 
 @media only screen and (max-width: 700px) {
