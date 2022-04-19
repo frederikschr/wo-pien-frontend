@@ -23,55 +23,53 @@
       <hr>
       <label><i>Items</i></label><br><br>
       <b>Items</b><br>
-      <div class="session-items">
-        <div style="height: 15 em; overflow-y: scroll;">
-          <table class="items">
-            <thead>
-              <tr>
-                <td>Name</td>
-                <td align="center">QTY</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in session.items" :key="item">
-                <td>{{ item.name }}</td>
+      <div class="session-items" style="width: 100%;">
 
-                <!--<td v-if="user.id === session.owner.id && !item.byHost"><p style="display: inline-block;">{{ item.amount_brought }} / </p><input style="display: inline-block; width: 50%;" type="number" min="1" max="100" v-model="item.amount" class="form-control"></td>
-                <td v-else-if="user.id === session.owner.id && item.byHost"><input style="width: 50%; text-align: center; margin: 0 auto;" type="number" v-model="item.amount" class="form-control"></td>
-                <td v-else-if="user.id !== session.owner && !item.byHost">{{ item.amount_brought }} / {{ item.amount }}</td>-->
-                <td>{{ item.amount_brought }} / {{ item.amount }}</td>
-                <td v-if="item.amount_brought !== item.amount"><i @click="bringItem(item)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1)"></i></td>
-                <td v-else><i class="fa fa-close" style="color: red;"></i></td>
-              </tr>
-            </tbody><br>
-            <tfoot>
-              <tr>
-                <td colspan="2">Total</td>
-                <td>{{ getTotalPrice }}€</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div><br><br>
-        <div class="myItems" v-if="myItems.length !== 0">
-          <b>Your Items</b><br><br>
           <div style="height: 15em; overflow-y: scroll;">
-            <table>
+            <table class="all-items">
               <thead>
                 <tr>
                   <td>Name</td>
-                  <td>Amount</td>
+                  <td align="center">QTY</td>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in myItems" :key="item">
+                <tr v-for="item in session.items" :key="item">
                   <td>{{ item.name }}</td>
-                  <td v-if="!item.already_existed"><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount - item.amount_brought }}</p></td>
-                  <td v-else><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount }}</p></td>
-                  <td><button type="button" style="background: white; cursor: pointer;" @click="removeItem(item)"><i class="fa fa-close" style="color: red;"></i></button></td>
+                  <td>{{ item.amount_brought }} / {{ item.amount }}</td>
+                  <td v-if="item.amount_brought !== item.amount"><i @click="bringItem(item)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1)"></i></td>
+                  <td v-else><i class="fa fa-close" style="color: red;"></i></td>
                 </tr>
-              </tbody>
+              </tbody><br>
+              <tfoot>
+                <tr>
+                  <td colspan="2">Total</td>
+                  <td>{{ getTotalPrice }}€</td>
+                </tr>
+              </tfoot>
             </table>
-          </div>
+        </div><br><br>
+
+        <b>Your Items</b><br><br>
+        <div v-if="myItems.length !== 0" style="height: 15em; overflow-y: scroll;">
+          <table class="my-items">
+            <thead>
+              <tr>
+                <td>Name</td>
+                <td>Amount</td>
+                <td>Price</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in myItems" :key="item">
+                <td>{{ item.name }}</td>
+                <td v-if="!item.already_existed"><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount - item.amount_brought }}</p></td>
+                <td v-else><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount }}</p></td>
+                <td><input type="number" v-model="item.price" class="form-control"></td>
+                <td><button type="button" style="background: white; cursor: pointer;" @click="removeItem(item)"><i class="fa fa-close" style="color: red;"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div><br>
 
@@ -139,6 +137,7 @@ export default {
       }).then(function (response) {
         app.session = response.data.session
         app.myItems = app.session.my_items
+        console.log(app.myItems)
         for (var i = 0; i < app.myItems.length; i++) {
           app.myItems[i].already_existed = true
         }
@@ -221,56 +220,75 @@ label {
   margin-top: 5%;
 }
 
-.view-session table {
+.session-items table {
   width: 100%;
 }
 
-.view-session table thead td {
+.all-items thead td, .my-items thead td {
   border-bottom: 3px solid rgba(0, 136, 169, .3);
 }
 
-.view-session table td {
-  padding: .5em;
+.all-items td, .my-items td {
   background: none;
   text-align: center;
   border-right: 3px solid rgba(0, 136, 169, .3);
   overflow-wrap: break-word;
 }
 
-.view-session table tfoot td:first-child {
+.all-items td {
+  padding: .5em;
+}
+
+.my-items td {
+  padding: .2em;
+}
+
+.session-items tfoot td:first-child {
   border-top: 3px dashed rgba(0, 136, 169, .3);
   border-right: none;
   text-align: right;
 }
 
-.view-session table tfoot td:last-child {
+.all-items tfoot td:last-child {
   border-top: 3px dashed rgba(0, 136, 169, .3);
 }
 
-.view-session table td:first-child {
+.all-items td:first-child {
   width: 50%;
 }
 
-.view-session table td:nth-child(2) {
+.all-items td:nth-child(2) {
   width: 35%;
 }
 
-.view-session table td:last-child, .myItems table td:nth-child(2) {
+.session-items td:last-child {
   border-right: none;
 }
 
-.view-session .myItems table thead tr:nth-child(2) {
+.all-items tr:nth-child(2) {
   border-bottom: none;
 }
 
-.view-session .items tbody tr td:nth-child(2) {
+.all-items tbody tr td:nth-child(2), .my-items tbody tr td:nth-child(3) {
   border-right: none;
+}
+
+.my-items td:first-child {
+  width: 30%;
+}
+
+.my-items td:nth-child(2) {
+  width: 45%;
+}
+
+.my-items td:last-child {
+  width: 25%;
 }
 
 @media only screen and (max-width: 700px) {
     .view-session {
         margin: 25% auto;
-        width: 70%;
+        width: 80%;
     }
 }
 </style>
