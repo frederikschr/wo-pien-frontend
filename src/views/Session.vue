@@ -25,7 +25,7 @@
       <b>Items</b><br>
       <div class="session-items" style="width: 100%;">
 
-          <div style="height: 15em; overflow-y: scroll;">
+          <div style="max-height: 15em; overflow-y: scroll;">
             <table class="all-items">
               <thead>
                 <tr>
@@ -41,17 +41,11 @@
                   <td v-else><i class="fa fa-close" style="color: red;"></i></td>
                 </tr>
               </tbody><br>
-              <tfoot>
-                <tr>
-                  <td colspan="2">Total</td>
-                  <td>{{ getTotalPrice }}€</td>
-                </tr>
-              </tfoot>
             </table>
         </div><br><br>
 
-        <b>Your Items</b><br><br>
-        <div v-if="myItems.length !== 0" style="height: 15em; overflow-y: scroll;">
+        <div v-if="myItems.length !== 0" style="max-height: 15em; overflow-y: scroll;">
+          <b>Your Items</b><br><br>
           <table class="my-items">
             <thead>
               <tr>
@@ -70,7 +64,14 @@
               </tr>
             </tbody>
           </table>
-        </div>
+        </div><br>
+
+        <b>Costs</b><br><br>
+        <p>Total session value: {{ session.total_value }}€</p><br>
+        <p>Host costs: {{ session.host_costs }}€</p><br>
+        <p>Price / Guest:</p>
+        <p v-if="session.members.length !== 1"> {{ session.host_costs / (session.members.length - 1) }}€</p>
+
       </div><br>
 
       <button class="btn btn-primary btn-lock" id="update">Update</button>
@@ -93,21 +94,12 @@ export default {
   data () {
     return {
       session: { name: '', description: '' },
-      myItems: []
+      myItems: [],
+      removedItems: []
     }
   },
   computed: {
-    ...mapGetters(['user', 'sessions']),
-    getTotalPrice () {
-      var total = 0
-      for (var i = 0; i < this.session.items_by_host.length; i++) {
-        var item = this.session.items_by_host[i]
-        if (item.price >= 0) {
-          total += item.price * item.amount
-        }
-      }
-      return parseFloat(total.toString().slice(0, 6))
-    }
+    ...mapGetters(['user', 'sessions'])
   },
   methods: {
     userInSession () {
@@ -120,6 +112,7 @@ export default {
     },
     async getSession () {
       const app = this
+      this.removedItems = []
       await axios.get('/session', {
         params: {
           id: this.$route.params.id
@@ -137,23 +130,17 @@ export default {
       }).then(function (response) {
         app.session = response.data.session
         app.myItems = app.session.my_items
-        console.log(app.myItems)
         for (var i = 0; i < app.myItems.length; i++) {
           app.myItems[i].already_existed = true
         }
       })
     },
-    getUpdatedItems () {
-      var items = []
-      for (var i = 0; i < this.myItems.length; i++) {
-        items.push(this.myItems[i])
-      }
-      return items
-    },
     async handleUpdate () {
       const app = this
       await axios.patch('/bring-items', {
-        updated_items: this.getUpdatedItems()
+        updated_items: this.myItems,
+        removed_items: this.removedItems,
+        session_id: this.session.id
       },
       {
         headers: {
@@ -164,7 +151,7 @@ export default {
           app.$store.dispatch('user', null)
           app.$router.push('/')
         } else {
-          console.log(e)
+          app.$store.dispatch('flashed', { message: e.error, success: false })
         }
       }).then(function (response) {
         app.getSession()
@@ -180,9 +167,13 @@ export default {
       this.myItems.push(item)
     },
     removeItem (item) {
+      console.log('here')
       for (var i = 0; i < this.myItems.length; i++) {
         if (this.myItems[i] === item) {
           this.myItems.splice(i, 1)
+          if (item.already_existed) {
+            this.removedItems.push(item)
+          }
         }
       }
     }
@@ -222,6 +213,7 @@ label {
 
 .session-items table {
   width: 100%;
+  table-layout: fixed;
 }
 
 .all-items thead td, .my-items thead td {
@@ -232,7 +224,6 @@ label {
   background: none;
   text-align: center;
   border-right: 3px solid rgba(0, 136, 169, .3);
-  overflow-wrap: break-word;
 }
 
 .all-items td {
