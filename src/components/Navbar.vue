@@ -5,16 +5,14 @@
       <header>
               <h1>WOPIEN</h1>
               <nav>
-                    <ul class="nav-links" id="nav-links">
-                        <li v-if="user"><router-link class="routers-nav" id="logout" to="/logout" @click="logout()">Logout</router-link></li>
-                        <li v-if="!user"><router-link class="routers-nav" to="login">Login</router-link></li>
-                        <li v-if="!user"><router-link class="routers-nav" to="register">Sign up</router-link></li>
-                        <li><router-link class="routers-nav" to="/">Home</router-link></li>
-                    </ul>
+                <ul class="nav-links" id="nav-links">
+                    <li v-if="user"><router-link class="routers-nav" id="logout" to="/logout" @click="logout()">Logout</router-link></li>
+                    <li v-if="!user"><router-link class="routers-nav" to="login">Login</router-link></li>
+                    <li v-if="!user"><router-link class="routers-nav" to="register">Sign up</router-link></li>
+                    <li><router-link class="routers-nav" to="/">Home</router-link></li>
+                </ul>
 
               </nav>
-              <button>Contact</button>
-
               <div class="drop-down">
                 <div @click="toggleMenu" class="container">
                   <div class="bar1"></div>
@@ -156,7 +154,7 @@ button {
 @media only screen and (max-width: 700px) {
     .nav-links {
       width: 100%;
-      height: 9%;
+      height: 80px;
       position: absolute;
       top: 80px;
       right: 0;
@@ -180,10 +178,6 @@ button {
     }
 
     .routers-nav {
-      display: none;
-    }
-
-    .nav-bar button {
       display: none;
     }
 

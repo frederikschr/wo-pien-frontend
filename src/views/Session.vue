@@ -70,7 +70,8 @@
         <p>Total session value: {{ session.total_value }}€</p><br>
         <p>Host costs: {{ session.host_costs }}€</p><br>
         <p>Price / Guest:</p>
-        <p v-if="session.members.length !== 1"> {{ session.host_costs / (session.members.length - 1) }}€</p>
+        <p v-if="session.members.length !== 1"> {{ session.host_costs / (session.members.length - 1) }}€</p><br>
+        <p>Your expenses: {{ session.my_costs }}€</p>
 
       </div><br>
 
