@@ -138,7 +138,7 @@ export default {
     async handleUpdate () {
       const app = this
       await axios.patch('/bring-items', {
-        updated_items: this.myItems,
+        updated_items: this.myItems.concat(this.removedItems),
         removed_items: this.removedItems,
         session_id: this.session.id
       },
