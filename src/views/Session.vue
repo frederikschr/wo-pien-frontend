@@ -1,81 +1,84 @@
 <template>
   <div class="view-session">
       <form @submit.prevent="handleUpdate()">
-      <div class="basic">
-        <h1>{{ session.name }}</h1>
-        <p>{{ session.description }}</p>
-      </div>
-      <hr>
-      <label><i>General Info</i></label>
-      <div class="general">
-        <b>Host:</b><p>{{ session.owner.username}}</p><br>
-        <b>Address:</b><p>{{ session.address}}</p><br>
-        <b>Date:</b><p>{{ session.date}}</p><br>
-        <b>Time:</b><p>{{ session.time}}</p>
-      </div>
-      <hr>
-      <label><i>People</i></label>
-      <div class="people">
-        <b>Accepted:</b><p v-for="member in session.members" :key="member.id">{{ member.username }}</p><br>
-        <b>Invited:</b><p v-for="invited in session.invited" :key="invited.id">{{ invited.username }}</p><br>
-        <u>Total:</u><p>{{ session.invited.length + session.members.length }}</p>
-      </div>
-      <hr>
-      <label><i>Items</i></label><br><br>
-      <b>Items</b><br>
-      <div class="session-items" style="width: 100%;">
+        <div class="edit" v-if="user.id === session.owner.id">
+          <button type="button" @click="editSession()" style="float: right;">Edit</button><br><br><br>
+        </div>
+        <div class="basic">
+          <h1>{{ session.name }}</h1>
+          <p>{{ session.description }}</p>
+        </div>
+        <hr>
+        <label><i>General Info</i></label>
+        <div class="general">
+          <b>Host:</b><p>{{ session.owner.username}}</p><br>
+          <b>Address:</b><p>{{ session.address}}</p><br>
+          <b>Date:</b><p>{{ session.date}}</p><br>
+          <b>Time:</b><p>{{ session.time}}</p>
+        </div>
+        <hr>
+        <label><i>People</i></label>
+        <div class="people">
+          <b>Accepted:</b><p v-for="member in session.members" :key="member.id">{{ member.username }}</p><br>
+          <b>Invited:</b><p v-for="invited in session.invited" :key="invited.id">{{ invited.username }}</p><br>
+          <u>Total:</u><p>{{ session.invited.length + session.members.length }}</p>
+        </div>
+        <hr>
+        <label><i>Items</i></label><br><br>
+        <b>Items</b><br>
+        <div class="session-items" style="width: 100%;">
 
-          <div style="max-height: 15em; overflow-y: scroll;">
-            <table class="all-items">
+            <div style="max-height: 15em; overflow-y: scroll;">
+              <table class="all-items">
+                <thead>
+                  <tr>
+                    <td>Name</td>
+                    <td align="center">QTY</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in session.items" :key="item">
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.amount_brought }} / {{ item.amount }}</td>
+                    <td v-if="item.amount_brought !== item.amount"><i @click="bringItem(item)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1)"></i></td>
+                    <td v-else><i class="fa fa-close" style="color: red;"></i></td>
+                  </tr>
+                </tbody><br>
+              </table>
+          </div><br><br>
+
+          <div v-if="myItems.length !== 0" style="max-height: 15em; overflow-y: scroll;">
+            <b>Your Items</b><br><br>
+            <table class="my-items">
               <thead>
                 <tr>
                   <td>Name</td>
-                  <td align="center">QTY</td>
+                  <td>Amount</td>
+                  <td>Price</td>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in session.items" :key="item">
+                <tr v-for="item in myItems" :key="item">
                   <td>{{ item.name }}</td>
-                  <td>{{ item.amount_brought }} / {{ item.amount }}</td>
-                  <td v-if="item.amount_brought !== item.amount"><i @click="bringItem(item)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1)"></i></td>
-                  <td v-else><i class="fa fa-close" style="color: red;"></i></td>
+                  <td v-if="!item.already_existed"><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount - item.amount_brought }}</p></td>
+                  <td v-else><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount }}</p></td>
+                  <td><input type="number" v-model="item.price" class="form-control"></td>
+                  <td><button type="button" style="background: white; cursor: pointer;" @click="removeItem(item)"><i class="fa fa-close" style="color: red;"></i></button></td>
                 </tr>
-              </tbody><br>
+              </tbody>
             </table>
-        </div><br><br>
+          </div><br>
 
-        <div v-if="myItems.length !== 0" style="max-height: 15em; overflow-y: scroll;">
-          <b>Your Items</b><br><br>
-          <table class="my-items">
-            <thead>
-              <tr>
-                <td>Name</td>
-                <td>Amount</td>
-                <td>Price</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in myItems" :key="item">
-                <td>{{ item.name }}</td>
-                <td v-if="!item.already_existed"><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount - item.amount_brought }}</p></td>
-                <td v-else><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount }}</p></td>
-                <td><input type="number" v-model="item.price" class="form-control"></td>
-                <td><button type="button" style="background: white; cursor: pointer;" @click="removeItem(item)"><i class="fa fa-close" style="color: red;"></i></button></td>
-              </tr>
-            </tbody>
-          </table>
+          <b>Costs</b><br><br>
+          <p>Total session value: {{ session.total_value }}€</p><br>
+          <p>Host costs: {{ session.host_costs }}€</p><br>
+          <p>Price / Guest:</p>
+          <p v-if="session.members.length !== 1"> {{ session.host_costs / (session.members.length - 1) }}€</p><br>
+          <p>Your expenses: {{ session.my_costs }}€</p>
+
         </div><br>
 
-        <b>Costs</b><br><br>
-        <p>Total session value: {{ session.total_value }}€</p><br>
-        <p>Host costs: {{ session.host_costs }}€</p><br>
-        <p>Price / Guest:</p>
-        <p v-if="session.members.length !== 1"> {{ session.host_costs / (session.members.length - 1) }}€</p><br>
-        <p>Your expenses: {{ session.my_costs }}€</p>
-
-      </div><br>
-
-      <button class="btn btn-primary btn-lock" id="update">Update</button>
+        <button class="btn btn-primary btn-lock" id="update">Update</button>
 
     </form>
   </div>
@@ -84,13 +87,15 @@
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
+import { session } from '../mixins'
 
 export default {
   name: 'Session',
+  mixins: [session],
   created () {
     if (this.$store.state.user == null || !this.userInSession()) {
       this.$router.push('/')
-    } else { this.getSession() }
+    } else { this.getSession_view() }
   },
   data () {
     return {
@@ -111,30 +116,9 @@ export default {
       }
       return false
     },
-    async getSession () {
-      const app = this
+    getSession_view () {
       this.removedItems = []
-      await axios.get('/session', {
-        params: {
-          id: this.$route.params.id
-        },
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        }
-      }).catch(function (e) {
-        if (e.response.status === 401) {
-          app.$store.dispatch('user', null)
-          app.$router.push('/')
-        } else {
-          console.log(e)
-        }
-      }).then(function (response) {
-        app.session = response.data.session
-        app.myItems = app.session.my_items
-        for (var i = 0; i < app.myItems.length; i++) {
-          app.myItems[i].already_existed = true
-        }
-      })
+      this.getSession(true)
     },
     async handleUpdate () {
       const app = this
@@ -177,9 +161,13 @@ export default {
           }
         }
       }
+    },
+    editSession () {
+      this.$router.push('/edit-session/' + this.$route.params.id)
     }
   }
 }
+
 </script>
 
 <style>

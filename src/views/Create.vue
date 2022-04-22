@@ -30,14 +30,14 @@
           <label>Members</label>
           <div class="input-group">
             <input type="text" v-model="person" class="form-control" id="members-field" maxlength="20" placeholder="Enter username"/>
-            <button type="button" @click="addPerson()" class="btn btn-primary btn-lock">Add</button>
+            <button type="button" @click="addPerson(this.members)" class="btn btn-primary btn-lock">Add</button>
           </div>
           <b>Members</b>
 
           <div id="people" style="overflow-y: scroll; height:10em;">
             <div class="person" v-for="person in members" :key="person">
               {{ person }}
-              <button class="del-person" v-if="person != this.user.username" @click="delPerson(person)"><i class="fa fa-close" style="color: red"></i></button>
+              <button class="del-person" v-if="person != this.user.username" @click="delPerson(person, this.members)"><i class="fa fa-close" style="color: red"></i></button>
             </div>
           </div>
 
@@ -54,7 +54,7 @@
           <div class="items-add">
               <input id="item" v-model='item_name' type="text" class="form-control" maxlength="20" placeholder="Enter Item"/>
               <input type="number" v-model='item_amount' class="form-control" placeholder="Amount">
-              <button type="button" @click="addItem()" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%">Add</button>
+              <button type="button" @click="addItem(this.items)" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%">Add</button>
           </div>
           <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" style="margin: 1em;">
           <label class="form-check-label" for="flexCheckDefault" style="margin: 1em; color: rgb(0, 136, 169)">
@@ -76,7 +76,7 @@
                 <td v-if="!item.byHost" align="center">{{ item.amount }}</td>
                 <td v-if="item.byHost" style="color: rgba(0, 136, 169, 1)">{{ item.name }}</td>
                 <td v-if="item.byHost" align="center" style="color: rgba(0, 136, 169, 1)">{{ item.amount }}</td>
-                <button class="del-item" @click="delItem(item)"><i class="fa fa-close" style="color: red;"></i></button>
+                <button class="del-item" @click="delItem(item, this.items)"><i class="fa fa-close" style="color: red;"></i></button>
               </tr>
             </tbody>
           </table>
@@ -92,9 +92,11 @@
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
+import { people, item } from '../mixins'
 
 export default {
   name: 'Create',
+  mixins: [people, item],
   data () {
     return {
       name: '',
@@ -155,53 +157,10 @@ export default {
         })
       }
     },
-    addPerson () {
-      if (this.person !== '') {
-        for (var i = 0; i < this.members.length; i++) {
-          if (this.members[i].split(' ').join('') === this.person.split(' ').join('')) {
-            this.person = ''
-            return false
-          }
-        }
-        this.members.push(this.person)
-        this.person = ''
-        var people = document.getElementById('people')
-        people.scrollTop = people.scrollHeight
-      }
-    },
-    delPerson (person) {
-      for (var i = 0; i < this.members.length; i++) {
-        if (this.members[i] === person) {
-          this.members.splice(i, 1)
-        }
-      }
-    },
     addGroup (group) {
       for (var i = 0; i < group.members.length; i++) {
         if (!this.members.includes(group.members[i])) {
           this.members.push(group.members[i])
-        }
-      }
-    },
-    addItem () {
-      if (this.item_name !== '' && this.item_amount > 0) {
-        for (var i = 0; i < this.items.length; i++) {
-          if (this.items[i].name.split(' ').join('') === this.item_name.split(' ').join('')) {
-            this.item_name = ''
-            return false
-          }
-        }
-        var byHost = document.getElementById('flexCheckDefault')
-        this.items.push({ name: this.item_name.trim(), amount: this.item_amount, byHost: byHost.checked })
-        this.item_name = ''
-        this.item_amount = 1
-        byHost.checked = false
-      }
-    },
-    delItem (item) {
-      for (var i = 0; i < this.items.length; i++) {
-        if (this.items[i] === item) {
-          this.items.splice(i, 1)
         }
       }
     }

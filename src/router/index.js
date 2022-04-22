@@ -5,6 +5,7 @@ import Register from '../views/Register.vue'
 import Create from '../views/Create.vue'
 import Invites from '../views/Invites.vue'
 import Session from '../views/Session.vue'
+import Edit from '../views/Edit.vue'
 import Logout from '../views/Logout.vue'
 
 const routes = [
@@ -37,6 +38,11 @@ const routes = [
     path: '/view-session/:id',
     name: 'Session',
     component: Session
+  },
+  {
+    path: '/edit-session/:id',
+    name: 'Edit',
+    component: Edit
   },
   {
     path: '/logout',
