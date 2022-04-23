@@ -37,7 +37,7 @@
           <div class="items-add">
               <input id="item" v-model='item_name' type="text" class="form-control" maxlength="20" placeholder="Enter Item"/>
               <input type="number" v-model='item_amount' class="form-control" placeholder="Amount">
-              <button type="button" @click="addItem(this.items)" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%">Add</button>
+              <button type="button" @click="addItem(this.session.items)" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%">Add</button>
           </div>
           <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" style="margin: 1em;">
           <label class="form-check-label" for="flexCheckDefault" style="margin: 1em; color: rgb(0, 136, 169)">
@@ -59,15 +59,15 @@
               <td v-if="!item.byHost" align="center">{{ item.amount }}</td>
               <td v-if="item.byHost" style="color: rgba(0, 136, 169, 1)">{{ item.name }}</td>
               <td v-if="item.byHost" align="center" style="color: rgba(0, 136, 169, 1)">{{ item.amount }}</td>
-              <button class="del-item" @click="delItem(item)"><i class="fa fa-close" style="color: red;"></i></button>
+              <button class="del-item" @click="delItem(item, this.session.items)"><i class="fa fa-close" style="color: red;"></i></button>
             </tr>
           </tbody>
         </table>
       </div>
 
-    </form><br>
+      <button class="btn btn-primary btn-lock">Commit</button>
 
-    <button class="btn btn-primary btn-lock">Commit</button>
+    </form><br>
 
   </div>
 </template>
@@ -75,6 +75,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { session, people } from '../mixins'
+import axios from 'axios'
 
 export default {
   name: 'Edit',
@@ -90,6 +91,8 @@ export default {
     return {
       session: null,
       items: [],
+      item_name: '',
+      item_amount: 1,
       members: [],
       person: ''
     }
@@ -110,8 +113,41 @@ export default {
       }
       return false
     },
-    commitChanges () {
-      console.log('changes made')
+    async commitChanges () {
+      const app = this
+      var failed = false
+      await axios.patch('/session-edit', {
+        ids: { session_id: this.session.id },
+        address: this.session.address,
+        date: this.session.date,
+        time: this.session.time,
+        members: this.members,
+        items: this.session.items
+      },
+      {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      }).catch(function (e) {
+        failed = true
+        if (e.response != null) {
+          if (e.response.status === 401) {
+            app.$store.dispatch('user', null)
+            app.$router.push('/')
+          } else {
+            const error = Object.values(e.response.data)[0][0]
+            app.$store.dispatch('flashed', { message: error, success: false })
+          }
+        } else {
+          app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
+        }
+      }).then(function (response) {
+        console.log(response)
+        if (!failed) {
+          app.$store.dispatch('flashed', { message: response.data.message, success: true })
+          app.getSession(false, true)
+        }
+      })
     }
   }
 }
