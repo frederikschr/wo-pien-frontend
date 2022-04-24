@@ -27,6 +27,7 @@ const session = {
           }
         }
         if (setMembers === true) {
+          app.members = []
           for (var x = 0; x < app.session.members.length; x++) {
             app.members.push(app.session.members[x].username)
           }

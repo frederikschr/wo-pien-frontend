@@ -59,7 +59,7 @@
               <td v-if="!item.byHost" align="center">{{ item.amount }}</td>
               <td v-if="item.byHost" style="color: rgba(0, 136, 169, 1)">{{ item.name }}</td>
               <td v-if="item.byHost" align="center" style="color: rgba(0, 136, 169, 1)">{{ item.amount }}</td>
-              <button class="del-item" @click="delItem(item, this.session.items)"><i class="fa fa-close" style="color: red;"></i></button>
+              <button type="button" class="del-item" @click="delItem(item, this.session.items)"><i class="fa fa-close" style="color: red;"></i></button>
             </tr>
           </tbody>
         </table>
