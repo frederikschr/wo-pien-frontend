@@ -139,7 +139,7 @@ export default {
           app.$store.dispatch('flashed', { message: e.error, success: false })
         }
       }).then(function (response) {
-        app.getSession()
+        app.getSession(true, false)
       })
     },
     bringItem (item) {

@@ -14,7 +14,7 @@
         </div>
         <div class="form-group">
             <label>Address</label>
-            <input type="text" class="form-control" v-model="address" maxlength="25" placeholder="Enter address"/>
+            <input type="text" class="form-control" v-model="address" maxlength="35" placeholder="Enter address"/>
         </div>
         <div class="form-group">
             <label>Date</label>

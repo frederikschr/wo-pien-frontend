@@ -4,7 +4,7 @@
     <form @submit.prevent="commitChanges()">
       <div class="form-group">
             <label>Address</label>
-            <input type="text" class="form-control" v-model="session.address" maxlength="25" placeholder="Enter address"/>
+            <input type="text" class="form-control" v-model="session.address" maxlength="35" placeholder="Enter address"/>
         </div>
         <div class="form-group">
             <label>Date</label>
@@ -56,9 +56,9 @@
           <tbody>
             <tr class="item" v-for="item in session.items" :key="item" style="color: black">
               <td v-if="!item.byHost">{{ item.name }}</td>
-              <td v-if="!item.byHost" align="center">{{ item.amount }}</td>
+              <td v-if="!item.byHost" align="center"><input type="number" v-model='item.amount' class="form-control"></td>
               <td v-if="item.byHost" style="color: rgba(0, 136, 169, 1)">{{ item.name }}</td>
-              <td v-if="item.byHost" align="center" style="color: rgba(0, 136, 169, 1)">{{ item.amount }}</td>
+              <td v-if="item.byHost" style="color: rgba(0, 136, 169, 1)"><input type="number" v-model='item.amount' class="form-control"></td>
               <button type="button" class="del-item" @click="delItem(item, this.session.items)"><i class="fa fa-close" style="color: red;"></i></button>
             </tr>
           </tbody>
@@ -66,6 +66,7 @@
       </div>
 
       <button class="btn btn-primary btn-lock">Commit</button>
+      <button type="button" class="btn btn-primary btn-lock" @click="delSession()" style="background: #F62020; margin: 2em; border: none;">Delete</button>
 
     </form><br>
 
@@ -74,12 +75,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { session, people } from '../mixins'
+import { session, people, item } from '../mixins'
 import axios from 'axios'
 
 export default {
   name: 'Edit',
-  mixins: [session, people],
+  mixins: [session, people, item],
   created () {
     if (this.$store.state.user === null || !this.userIsOwner()) {
       this.$router.push('/')
@@ -113,6 +114,38 @@ export default {
       }
       return false
     },
+    async delSession () {
+      if (confirm('Are you sure you want to delete this session?')) {
+        const app = this
+        var failed = false
+        await axios.delete('/session-edit', {
+          data: {
+            session_id: this.session.id
+          },
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+          }
+        }).catch(function (e) {
+          failed = true
+          if (e.response != null) {
+            if (e.response.status === 401) {
+              app.$store.dispatch('user', null)
+              app.$router.push('/')
+            } else {
+              const error = Object.values(e.response.data)[0][0]
+              app.$store.dispatch('flashed', { message: error, success: false })
+            }
+          } else {
+            app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
+          }
+        }).then(function (response) {
+          if (!failed) {
+            app.$store.dispatch('flashed', { message: response.data.message, success: true })
+            app.$router.push('/')
+          }
+        })
+      }
+    },
     async commitChanges () {
       const app = this
       var failed = false
@@ -142,7 +175,6 @@ export default {
           app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
         }
       }).then(function (response) {
-        console.log(response)
         if (!failed) {
           app.$store.dispatch('flashed', { message: response.data.message, success: true })
           app.getSession(false, true)

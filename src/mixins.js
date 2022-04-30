@@ -44,7 +44,6 @@ const people = {
         for (var i = 0; i < target.length; i++) {
           if (target[i].split(' ').join('') === this.person.split(' ').join('')) {
             this.person = ''
-            console.log('here')
             return false
           }
         }
