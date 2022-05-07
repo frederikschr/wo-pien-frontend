@@ -10,6 +10,7 @@
                     <li v-if="!user"><router-link class="routers-nav" to="login">Login</router-link></li>
                     <li v-if="!user"><router-link class="routers-nav" to="register">Sign up</router-link></li>
                     <li><router-link class="routers-nav" to="/">Home</router-link></li>
+                    <li><router-link class="routers-nav" to="/about">About</router-link></li>
                 </ul>
 
               </nav>

@@ -8,13 +8,14 @@
       <button><router-link class="routers" to="register"> Sign up </router-link></button>
       </div>
 
+      <!--
       <div class="image">
         <input type="file" name="file" accept=".png, .jpg, .jpeg" :maxFileSize="1000" ref="fileInput" @change="onFileChange">
         <label for="imageUpload"></label>
 
          <img :src="`${url}`">
-
       </div>
+      -->
 
     </div>
 

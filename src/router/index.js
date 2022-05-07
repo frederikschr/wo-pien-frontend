@@ -7,6 +7,7 @@ import Invites from '../views/Invites.vue'
 import Session from '../views/Session.vue'
 import Edit from '../views/Edit.vue'
 import Logout from '../views/Logout.vue'
+import About from '../views/About.vue'
 
 const routes = [
   {
@@ -48,6 +49,11 @@ const routes = [
     path: '/logout',
     name: 'Logout',
     component: Logout
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: About
   }
 ]
 
