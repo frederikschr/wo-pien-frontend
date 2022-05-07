@@ -19,10 +19,16 @@
       <label><i>People</i></label>
       <div class="people">
          <div class="input-group">
-            <input type="text" v-model="person" class="form-control" id="members-field" maxlength="20" placeholder="Enter username"/>
-            <button type="button" @click="addPerson(this.members)" class="btn btn-primary btn-lock">Add</button>
+            <input type="text" v-model="person" @input="findPerson(this.person)" class="form-control" id="members-field" maxlength="20" placeholder="Enter username"/>
+            <button type="button" @click="addPerson(this.members, this.person)" class="btn btn-primary btn-lock">Add</button>
          </div>
+        </div>
+
+        <div class="find-member" v-if="found_member !== ''" style="height: 2em; margin-top: 1em;">
+            <p>{{ found_member }}</p>
+            <i @click="addPerson(this.members, this.found_member)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1); float: right;"></i>
         </div><br>
+
         <b>Members</b>
         <div class="members-list">
           <div class="person" v-for="member in members" :key="member">
@@ -96,11 +102,12 @@ export default {
       item_name: '',
       item_amount: 1,
       members: [],
-      person: ''
+      person: '',
+      found_member: ''
     }
   },
   computed: {
-    ...mapGetters(['user', 'sessions'])
+    ...mapGetters(['user', 'sessions', 'all_users'])
   },
   methods: {
     userIsOwner () {

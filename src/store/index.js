@@ -6,7 +6,8 @@ export default createStore({
     flashed: { message: 'Welcome to Wo Pien!', success: true },
     sessions: null,
     groups: [{ name: 'Saufqwdwqen', members: ['Fredo', 'Ole', 'Tim'] }, { name: 'Dickus pIenuadadaw', members: ['Fredo', 'Ole', 'Tim'] },
-      { name: 'Saufen', members: ['Fredo', 'Ole', 'Tim'] }, { name: 'Saufen', members: ['Fredo', 'Ole', 'Tim'] }]
+      { name: 'Saufen', members: ['Fredo', 'Ole', 'Tim'] }, { name: 'Saufen', members: ['Fredo', 'Ole', 'Tim'] }],
+    all_users: null
   },
   mutations: {
     user (state, user) {
@@ -20,6 +21,9 @@ export default createStore({
     },
     groups (state, groups) {
       state.groups = groups
+    },
+    all_users (state, allUsers) {
+      state.all_users = allUsers
     }
   },
   actions: {
@@ -34,6 +38,9 @@ export default createStore({
     },
     groups (context, groups) {
       context.commit('groups', groups)
+    },
+    all_users (context, allUsers) {
+      context.commit('all_users', allUsers)
     }
   },
   getters: {
@@ -48,6 +55,9 @@ export default createStore({
     },
     groups: (state) => {
       return state.groups
+    },
+    all_users: (state) => {
+      return state.all_users
     }
   }
 })

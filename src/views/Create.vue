@@ -29,11 +29,16 @@
         <div class="form-goup">
           <label>Members</label>
           <div class="input-group">
-            <input type="text" v-model="person" class="form-control" id="members-field" maxlength="20" placeholder="Enter username"/>
-            <button type="button" @click="addPerson(this.members)" class="btn btn-primary btn-lock">Add</button>
+            <input type="text" v-model="person" @input="findPerson(this.person)" class="form-control" id="members-field" maxlength="20" placeholder="Enter username"/>
+            <button type="button" @click="addPerson(this.members, this.person)" class="btn btn-primary btn-lock">Add</button>
           </div>
-          <b>Members</b>
 
+          <div class="find-member" v-if="found_member !== ''" style="height: 2em; margin-top: 1em;">
+            <p>{{ found_member }}</p>
+            <i @click="addPerson(this.members, this.found_member)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1); float: right;"></i>
+          </div><br>
+
+          <b>Members</b>
           <div id="people" style="overflow-y: scroll; height:10em;">
             <div class="person" v-for="person in members" :key="person">
               {{ person }}
@@ -108,7 +113,8 @@ export default {
       members: [],
       item_name: '',
       item_amount: 1,
-      items: []
+      items: [],
+      found_member: ''
     }
   },
   created () {
@@ -166,7 +172,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['user', 'groups'])
+    ...mapGetters(['user', 'groups', 'all_users'])
   }
 }
 </script>

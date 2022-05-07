@@ -40,16 +40,18 @@ const session = {
 
 const people = {
   methods: {
-    addPerson (target) {
-      if (this.person !== '') {
+    addPerson (target, member) {
+      if (member !== '') {
         for (var i = 0; i < target.length; i++) {
-          if (target[i].split(' ').join('') === this.person.split(' ').join('')) {
+          if (target[i].split(' ').join('') === member.split(' ').join('')) {
             this.person = ''
+            this.found_member = ''
             return false
           }
         }
-        target.push(this.person)
+        target.push(member)
         this.person = ''
+        this.found_member = ''
         var people = document.getElementById('people')
         if (people) {
           people.scrollTop = people.scrollHeight
@@ -62,6 +64,18 @@ const people = {
           target.splice(i, 1)
         }
       }
+    },
+    findPerson (person) {
+      console.log(person)
+      if (person !== '') {
+        for (var i = 0; i < this.all_users.length; i++) {
+          if (this.all_users[i].includes(person) && this.all_users[i] !== this.user.username) {
+            this.found_member = this.all_users[i]
+            return
+          }
+        }
+      }
+      this.found_member = ''
     }
   }
 }
