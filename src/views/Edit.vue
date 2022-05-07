@@ -92,6 +92,7 @@ export default {
     return {
       session: null,
       items: [],
+      del_items: [],
       item_name: '',
       item_amount: 1,
       members: [],
@@ -155,7 +156,8 @@ export default {
         date: this.session.date,
         time: this.session.time,
         members: this.members,
-        items: this.session.items
+        items: this.session.items,
+        del_items: this.del_items
       },
       {
         headers: {

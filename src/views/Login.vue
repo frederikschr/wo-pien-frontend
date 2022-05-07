@@ -48,6 +48,7 @@ export default {
           localStorage.setItem('token', response.data.token)
           app.$store.dispatch('user', response.data.user)
           app.$store.dispatch('flashed', { message: 'Logged in successfully', success: true })
+          app.$store.dispatch('all_users', response.data.all_users)
         })
         this.$router.push('/')
       }

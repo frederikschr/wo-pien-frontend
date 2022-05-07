@@ -26,7 +26,7 @@
         <hr>
         <label><i>Items</i></label><br><br>
         <b>Items</b><br>
-        <div class="session-items" style="width: 100%;">
+        <div v-if="session.items.length !== 0" class="session-items" style="width: 100%;">
 
             <div style="max-height: 15em; overflow-y: scroll;">
               <table class="all-items">
@@ -47,7 +47,7 @@
               </table>
           </div><br><br>
 
-          <div v-if="myItems.length !== 0" style="max-height: 15em; overflow-y: scroll;">
+          <div v-if="my_items.length !== 0" style="max-height: 15em; overflow-y: scroll;">
             <b>Your Items</b><br><br>
             <table class="my-items">
               <thead>
@@ -58,7 +58,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in myItems" :key="item">
+                <tr v-for="item in my_items" :key="item">
                   <td>{{ item.name }}</td>
                   <td v-if="!item.already_existed"><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount - item.amount_brought }}</p></td>
                   <td v-else><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount }}</p></td>
@@ -95,13 +95,13 @@ export default {
   created () {
     if (this.$store.state.user == null || !this.userInSession()) {
       this.$router.push('/')
-    } else { this.getSession_view() }
+    } else { this.getSession(true, false) }
   },
   data () {
     return {
       session: { name: '', description: '' },
-      myItems: [],
-      removedItems: []
+      my_items: [],
+      del_items: []
     }
   },
   computed: {
@@ -116,15 +116,11 @@ export default {
       }
       return false
     },
-    getSession_view () {
-      this.removedItems = []
-      this.getSession(true)
-    },
     async handleUpdate () {
       const app = this
       await axios.patch('/bring-items', {
-        updated_items: this.myItems.concat(this.removedItems),
-        removed_items: this.removedItems,
+        updated_items: this.my_items,
+        removed_items: this.del_items,
         session_id: this.session.id
       },
       {
@@ -136,28 +132,30 @@ export default {
           app.$store.dispatch('user', null)
           app.$router.push('/')
         } else {
-          app.$store.dispatch('flashed', { message: e.error, success: false })
+          console.log(e.response)
+          app.$store.dispatch('flashed', { message: e.response.data.error, success: false })
         }
-      }).then(function (response) {
+      }).then(function () {
         app.getSession(true, false)
       })
     },
     bringItem (item) {
-      for (var i = 0; i < this.myItems.length; i++) {
-        if (this.myItems[i].id === item.id) {
+      for (var i = 0; i < this.my_items.length; i++) {
+        if (this.my_items[i].id === item.id) {
           return false
         }
       }
       item.bring_amount = 1
-      this.myItems.push(item)
+      this.my_items.push(item)
     },
     removeItem (item) {
-      console.log('here')
-      for (var i = 0; i < this.myItems.length; i++) {
-        if (this.myItems[i] === item) {
-          this.myItems.splice(i, 1)
+      console.log(item)
+      for (var i = 0; i < this.my_items.length; i++) {
+        if (this.my_items[i] === item) {
+          this.my_items.splice(i, 1)
           if (item.already_existed) {
-            this.removedItems.push(item)
+            console.log(item)
+            this.del_items.push(item)
           }
         }
       }

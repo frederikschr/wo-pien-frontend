@@ -7,6 +7,15 @@
       <button><router-link class="routers" to="login"> Login </router-link></button>
       <button><router-link class="routers" to="register"> Sign up </router-link></button>
       </div>
+
+      <div class="image">
+        <input type="file" name="file" accept=".png, .jpg, .jpeg" :maxFileSize="1000" ref="fileInput" @change="onFileChange">
+        <label for="imageUpload"></label>
+
+         <img :src="`${url}`">
+
+      </div>
+
     </div>
 
     <div v-else class="base">
@@ -22,6 +31,7 @@
           <button><router-link class="routers" to="/invites">Invites</router-link></button>
         </div>
       </div>
+
       <div class="sessions" v-if="sessions.length !== 0">
         <ul>
           <li v-for="session in sessions" :key="session.name">
@@ -72,9 +82,21 @@ export default {
       })
     }
   },
+  data () {
+    return {
+      url: null
+    }
+  },
+
   methods: {
     loadPage (session) {
       this.$router.push('/view-session/' + session)
+    },
+    onFileChange (e) {
+      const file = e.target.files[0]
+      const url = URL.createObjectURL(file)
+      console.log(url)
+      this.url = url
     }
   },
   computed: {

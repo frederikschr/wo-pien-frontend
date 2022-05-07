@@ -20,10 +20,11 @@ const session = {
         }
       }).then(function (response) {
         app.session = response.data.session
+        app.del_items = []
         if (inview === true) {
-          app.myItems = app.session.my_items
-          for (var i = 0; i < app.myItems.length; i++) {
-            app.myItems[i].already_existed = true
+          app.my_items = app.session.my_items
+          for (var i = 0; i < app.my_items.length; i++) {
+            app.my_items[i].already_existed = true
           }
         }
         if (setMembers === true) {
@@ -86,6 +87,10 @@ const item = {
       for (var i = 0; i < target.length; i++) {
         if (target[i] === item) {
           target.splice(i, 1)
+          if (Object.prototype.hasOwnProperty.call(item, 'id')) {
+            console.log(this.del_items)
+            this.del_items.push(item)
+          }
         }
       }
     }
