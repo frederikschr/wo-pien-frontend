@@ -27,7 +27,6 @@
         <label><i>Items</i></label><br><br>
         <b>Items</b><br>
         <div v-if="session.items.length !== 0" class="session-items" style="width: 100%;">
-
             <div style="max-height: 15em; overflow-y: scroll;">
               <table class="all-items">
                 <thead>
@@ -40,8 +39,7 @@
                   <tr v-for="item in session.items" :key="item">
                     <td>{{ item.name }}</td>
                     <td>{{ item.amount_brought }} / {{ item.amount }}</td>
-                    <td v-if="item.amount_brought !== item.amount"><i @click="bringItem(item)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1)"></i></td>
-                    <td v-else><i class="fa fa-close" style="color: red;"></i></td>
+                    <td><i @click="bringItem(item)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1)"></i></td>
                   </tr>
                 </tbody><br>
               </table>

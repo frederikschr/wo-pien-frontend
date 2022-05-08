@@ -7,10 +7,11 @@
               <nav>
                 <ul class="nav-links" id="nav-links">
                     <li v-if="user"><router-link class="routers-nav" id="logout" to="/logout" @click="logout()">Logout</router-link></li>
-                    <li v-if="!user"><router-link class="routers-nav" to="login">Login</router-link></li>
-                    <li v-if="!user"><router-link class="routers-nav" to="register">Sign up</router-link></li>
-                    <li><router-link class="routers-nav" to="/">Home</router-link></li>
-                    <li><router-link class="routers-nav" to="/about">About</router-link></li>
+                    <li v-if="user"><router-link @click="toggleMenu()" class="routers-nav" to="/profile">Profile</router-link></li>
+                    <li v-if="!user"><router-link @click="toggleMenu()" class="routers-nav" to="login">Login</router-link></li>
+                    <li v-if="!user"><router-link @click="toggleMenu()" class="routers-nav" to="register">Signup</router-link></li>
+                    <li><router-link @click="toggleMenu()" class="routers-nav" to="/">Home</router-link></li>
+                    <li><router-link @click="toggleMenu()" class="routers-nav" to="/about">About</router-link></li>
                 </ul>
 
               </nav>
@@ -38,23 +39,25 @@ export default {
   },
   methods: {
     toggleMenu () {
-      var menu = document.getElementById('nav-links')
-      var routers = document.getElementsByClassName('routers-nav')
-      if (menu.style.maxHeight === '0px') {
-        menu.style.maxHeight = '130px'
-        for (var i = 0; i < routers.length; i++) {
-          routers[i].style.display = 'block'
-        }
-      } else {
-        menu.style.maxHeight = '0px'
-        setTimeout(() => {
+      if (screen.width < 700) {
+        var menu = document.getElementById('nav-links')
+        var routers = document.getElementsByClassName('routers-nav')
+        if (menu.style.maxHeight === '0px') {
+          menu.style.maxHeight = '130px'
           for (var i = 0; i < routers.length; i++) {
-            routers[i].style.display = 'none'
+            routers[i].style.display = 'block'
           }
-        }, 400)
-      }
-      if (this.flashed) {
-        this.$store.dispatch('flashed', null)
+        } else {
+          menu.style.maxHeight = '0px'
+          setTimeout(() => {
+            for (var i = 0; i < routers.length; i++) {
+              routers[i].style.display = 'none'
+            }
+          }, 400)
+        }
+        if (this.flashed) {
+          this.$store.dispatch('flashed', null)
+        }
       }
     },
     logout () {
@@ -79,7 +82,7 @@ export default {
     padding: 0;
 }
 
-li, a, button, router-link, .router-nav {
+li, a, button, router-link {
     font-weight: 500;
     font-size: 16px;
     color: #ffffff;
@@ -106,11 +109,6 @@ header {
     padding: 20px 30px;
     margin-top: 20px;
 }
-
-.nav-links li:hover {
-   cursor: pointer;
-   text-decoration: none;
- }
 
 .routers-nav:hover, .router-link-active {
     transition: .3s;
@@ -154,6 +152,8 @@ button {
 
 @media only screen and (max-width: 700px) {
     .nav-links {
+      display: flex;
+      justify-content: space-evenly;
       width: 100%;
       height: 80px;
       position: absolute;
@@ -168,26 +168,23 @@ button {
       color: white;
     }
 
-    .nav-links li{
+    .nav-links li {
         display: block;
+        padding: 5%;
         margin-top: 3%;
-        float: right;
+        text-align: left;
     }
 
     .nav-links {
       max-height: 0px;
     }
 
-    .routers-nav {
+    .routers-nav, #logout {
       display: none;
     }
 
     .drop-down {
       display: block;
-    }
-
-    #logout {
-      display: none
     }
 }
 </style>

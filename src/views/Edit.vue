@@ -1,41 +1,43 @@
 <template>
   <div class="edit-session">
+    <button type="button" @click="returnToSession()" style="float:right;">Return</button><br><br><br>
     <h1>Edit Session</h1>
     <form @submit.prevent="commitChanges()">
       <div class="form-group">
-            <label>Address</label>
-            <input type="text" class="form-control" v-model="session.address" maxlength="35" placeholder="Enter address"/>
-        </div>
-        <div class="form-group">
-            <label>Date</label>
-            <input type="date" class="form-control" v-model="session.date" placeholder="Enter date" min="01-03-2022" max="01-01-2023"/>
-        </div>
+        <label>Address</label>
+        <input type="text" class="form-control" v-model="session.address" maxlength="35" placeholder="Enter address"/>
+      </div>
 
-        <div class="form-group">
-            <label>Time</label>
-            <input type="time" class="form-control" v-model="session.time" placeholder="Enter date" min="2022-03-01" max="2023-01-01"/>
+      <div class="form-group">
+          <label>Date</label>
+          <input type="date" class="form-control" v-model="session.date" placeholder="Enter date" min="01-03-2022" max="01-01-2023"/>
+      </div>
+
+      <div class="form-group">
+          <label>Time</label>
+          <input type="time" class="form-control" v-model="session.time" placeholder="Enter date" min="2022-03-01" max="2023-01-01"/>
+      </div>
+
+    <label><i>People</i></label>
+    <div class="people">
+        <div class="input-group">
+          <input type="text" v-model="person" @input="findPerson(this.person)" class="form-control" id="members-field" maxlength="20" placeholder="Enter username"/>
+          <button type="button" @click="addPerson(this.members, this.person)" class="btn btn-primary btn-lock">Add</button>
         </div>
+      </div>
 
-      <label><i>People</i></label>
-      <div class="people">
-         <div class="input-group">
-            <input type="text" v-model="person" @input="findPerson(this.person)" class="form-control" id="members-field" maxlength="20" placeholder="Enter username"/>
-            <button type="button" @click="addPerson(this.members, this.person)" class="btn btn-primary btn-lock">Add</button>
-         </div>
+      <div class="find-member" v-if="found_member !== ''" style="height: 2em; margin-top: 1em;">
+          <p>{{ found_member }}</p>
+          <i @click="addPerson(this.members, this.found_member)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1); float: right;"></i>
+      </div><br>
+
+      <b>Members</b>
+      <div class="members-list">
+        <div class="person" v-for="member in members" :key="member">
+          {{ member }}
+          <button type="button" class="del-person" v-if="member != this.user.username" @click="delPerson(member, this.members)"><i class="fa fa-close" style="color: red"></i></button>
         </div>
-
-        <div class="find-member" v-if="found_member !== ''" style="height: 2em; margin-top: 1em;">
-            <p>{{ found_member }}</p>
-            <i @click="addPerson(this.members, this.found_member)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1); float: right;"></i>
-        </div><br>
-
-        <b>Members</b>
-        <div class="members-list">
-          <div class="person" v-for="member in members" :key="member">
-            {{ member }}
-            <button type="button" class="del-person" v-if="member != this.user.username" @click="delPerson(member, this.members)"><i class="fa fa-close" style="color: red"></i></button>
-          </div>
-        </div><br>
+      </div><br>
 
       <label><i>Items</i></label>
       <div class="form-group">
@@ -115,9 +117,7 @@ export default {
         if (this.sessions[i].id === parseInt(this.$route.params.id)) {
           if (this.sessions[i].owner.id === this.user.id) {
             return true
-          } else {
-            break
-          }
+          } else { break }
         }
       }
       return false
@@ -186,9 +186,13 @@ export default {
       }).then(function (response) {
         if (!failed) {
           app.$store.dispatch('flashed', { message: response.data.message, success: true })
+          window.scrollTo({ top: 0, behavior: 'smooth' })
           app.getSession(false, true)
         }
       })
+    },
+    returnToSession () {
+      this.$router.push('/view-session/' + this.$route.params.id)
     }
   }
 }
