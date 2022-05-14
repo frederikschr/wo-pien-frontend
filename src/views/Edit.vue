@@ -189,6 +189,8 @@ export default {
           window.scrollTo({ top: 0, behavior: 'smooth' })
           app.getSession(false, true)
         }
+      }).finally(function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       })
     },
     returnToSession () {

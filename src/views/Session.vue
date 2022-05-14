@@ -130,11 +130,14 @@ export default {
           app.$store.dispatch('user', null)
           app.$router.push('/')
         } else {
-          console.log(e.response)
-          app.$store.dispatch('flashed', { message: e.response.data.error, success: false })
+          const error = Object.values(e.response.data)[0][0]
+          app.$store.dispatch('flashed', { message: error, success: false })
         }
-      }).then(function () {
+      }).then(function (response) {
+        app.$store.dispatch('flashed', { message: response.data.message, success: true })
         app.getSession(true, false)
+      }).finally(function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       })
     },
     bringItem (item) {
@@ -147,12 +150,10 @@ export default {
       this.my_items.push(item)
     },
     removeItem (item) {
-      console.log(item)
       for (var i = 0; i < this.my_items.length; i++) {
         if (this.my_items[i] === item) {
           this.my_items.splice(i, 1)
           if (item.already_existed) {
-            console.log(item)
             this.del_items.push(item)
           }
         }
