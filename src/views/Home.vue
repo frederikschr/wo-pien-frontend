@@ -7,26 +7,11 @@
       <button><router-link class="routers" to="login"> Login </router-link></button>
       <button><router-link class="routers" to="register"> Sign up </router-link></button>
       </div>
-
-      <!--
-      <div class="image">
-        <input type="file" name="file" accept=".png, .jpg, .jpeg" :maxFileSize="1000" ref="fileInput" @change="onFileChange">
-        <label for="imageUpload"></label>
-
-         <img :src="`${url}`">
-      </div>
-      -->
-
     </div>
 
     <div v-else class="base">
       <h1>Welcome {{ user.username }}!</h1>
       <div class="header">
-        <!--
-        <div>
-          <input class="form-control rounded-0 py-2" type="search" id="example-search-input" placeholder="Search...">
-        </div>
-        -->
         <div>
           <button><router-link class="routers" to="/create-session">Create</router-link></button>
           <button><router-link class="routers" to="/invites">Invites</router-link></button>
@@ -154,7 +139,7 @@ input {
 .sessions {
   position: relative;
   padding-top: 1em;
-  width: 75%;
+  width: 50%;
   margin: 0 auto;
 }
 
@@ -166,7 +151,7 @@ input {
 hr {
   border-top: 4px solid rgba(0, 136, 169, 1);
   border-radius: 5px;
-  margin: auto 0;
+  margin: auto;
 }
 
 .sessions li {
@@ -190,6 +175,10 @@ h2 {
    .hello button {
      padding: 2em 5em;
      font-size: .3em;
+   }
+
+   .sessions {
+     width: 75%;
    }
 
    .directions {

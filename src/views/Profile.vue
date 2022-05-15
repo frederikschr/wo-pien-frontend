@@ -30,8 +30,8 @@
 
     <div class="statistics">
       <h2>Statistics</h2>
-      <label>Sessions attendet</label>
-      <p>{{ user.sessions_attendet }}</p>
+      <label>Sessions attendet: </label>
+      <p>{{ user.sessions_attended }}</p>
     </div>
 
   </div>

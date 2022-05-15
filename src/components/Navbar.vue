@@ -164,10 +164,6 @@ button {
       transition: 1s;
     }
 
-    .router-link-active {
-      color: white;
-    }
-
     .nav-links li {
         display: block;
         padding: 5%;
@@ -185,6 +181,10 @@ button {
 
     .drop-down {
       display: block;
+    }
+
+    .routers-nav:hover, .router-link-active {
+      color: white;
     }
 }
 </style>
