@@ -5,8 +5,7 @@ export default createStore({
     user: null,
     flashed: { message: 'Welcome to Wo Pien!', success: true },
     sessions: null,
-    groups: [{ name: 'Saufqwdwqen', members: ['Fredo', 'Ole', 'Tim'] }, { name: 'Dickus pIenuadadaw', members: ['Fredo', 'Ole', 'Tim'] },
-      { name: 'Saufen', members: ['Fredo', 'Ole', 'Tim'] }, { name: 'Saufen', members: ['Fredo', 'Ole', 'Tim'] }],
+    groups: [{ name: 'Saufen', members: ['Fredo', 'Ole', 'Tim'] }, { name: 'Piener Verein', members: ['S9, Frodo, Nils, Luca'] }],
     all_users: null
   },
   mutations: {
