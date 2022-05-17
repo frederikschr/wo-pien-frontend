@@ -30,7 +30,7 @@
           <label>Members</label>
           <div class="input-group">
             <input type="text" v-model="person" @input="findPerson(this.person)" class="form-control" id="members-field" maxlength="20" placeholder="Enter username"/>
-            <button type="button" @click="addPerson(this.members, this.person)" class="btn btn-primary btn-lock">Add</button>
+            <button type="button" @click="addPerson(this.members, this.person)" class="btn btn-primary btn-lock" style="background-color: rgba(0, 136, 169, 1); border: none;">Add</button>
           </div>
 
           <div class="find-member" v-if="found_member !== ''" style="height: 2em; margin-top: 1em;">
@@ -59,7 +59,7 @@
           <div class="items-add">
               <input id="item" v-model='item_name' type="text" class="form-control" maxlength="20" placeholder="Enter Item"/>
               <input type="number" v-model='item_amount' class="form-control" placeholder="Amount">
-              <button type="button" @click="addItem(this.items)" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%">Add</button>
+              <button type="button" @click="addItem(this.items)" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%; background-color: rgba(0, 136, 169, 1); border: none;">Add</button>
           </div>
           <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" style="margin: 1em;">
           <label class="form-check-label" for="flexCheckDefault" style="margin: 1em; color: rgb(0, 136, 169)">
@@ -85,9 +85,9 @@
               </tr>
             </tbody>
           </table>
-        </div>
+        </div><br><br>
 
-        <button class="btn btn-primary btn-lock" id="submit">Create</button>
+        <button class="btn btn-primary btn-lock" id="form-button">Create</button>
 
     </form>
 
@@ -199,11 +199,6 @@ textarea {
 .input-group button {
   margin-top: .5em;
   height: 2.5em;
-}
-
-#submit {
-  float: left;
-  margin-top: 2em;
 }
 
 #members-field {

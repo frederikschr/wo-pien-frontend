@@ -12,7 +12,7 @@
             <input type="password" class="form-control" v-model="password" placeholder="Enter password"/>
         </div>
 
-        <button class="btn btn-primary btn-lock">Login</button>
+        <button class="btn btn-primary btn-lock" id="form-button">Login</button>
     </form>
 
     </div>

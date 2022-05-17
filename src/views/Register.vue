@@ -15,7 +15,7 @@
             <input type="password" class="form-control" maxlength="20" v-model="password" placeholder="Enter password"/>
         </div>
 
-        <button class="btn btn-primary btn-lock">Submit</button>
+        <button class="btn btn-primary btn-lock" id="form-button">Submit</button>
     </form>
 
   </div>

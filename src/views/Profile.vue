@@ -24,7 +24,7 @@
         <input type="number" class="form-control" v-model="user_profile.promille_record" step="any">
       </div><br>
 
-      <button class="btn btn-primary btn-lock">Update</button>
+      <button class="btn btn-primary btn-lock" id="form-button">Update</button>
 
     </form><br>
 

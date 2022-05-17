@@ -22,7 +22,7 @@
     <div class="people">
         <div class="input-group">
           <input type="text" v-model="person" @input="findPerson(this.person)" class="form-control" id="members-field" maxlength="20" placeholder="Enter username"/>
-          <button type="button" @click="addPerson(this.members, this.person)" class="btn btn-primary btn-lock">Add</button>
+          <button type="button" @click="addPerson(this.members, this.person)" class="btn btn-primary btn-lock" style="background-color: rgba(0, 136, 169, 1); border: none;">Add</button>
         </div>
       </div>
 
@@ -45,7 +45,7 @@
           <div class="items-add">
               <input id="item" v-model='item_name' type="text" class="form-control" maxlength="20" placeholder="Enter Item"/>
               <input type="number" v-model='item_amount' class="form-control" placeholder="Amount">
-              <button type="button" @click="addItem(this.session.items)" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%">Add</button>
+              <button type="button" @click="addItem(this.session.items)" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%; background-color: rgba(0, 136, 169, 1); border: none;">Add</button>
           </div>
           <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" style="margin: 1em;">
           <label class="form-check-label" for="flexCheckDefault" style="margin: 1em; color: rgb(0, 136, 169)">
@@ -73,7 +73,7 @@
         </table>
       </div>
 
-      <button class="btn btn-primary btn-lock">Commit</button>
+      <button class="btn btn-primary btn-lock" id="form-button">Commit</button>
       <button type="button" class="btn btn-primary btn-lock" @click="delSession()" style="background: #F62020; margin: 2em; border: none;">Delete</button>
 
     </form><br>

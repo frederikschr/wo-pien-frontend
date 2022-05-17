@@ -76,7 +76,7 @@
 
         </div><br>
 
-        <button class="btn btn-primary btn-lock" id="update">Update</button>
+        <button class="btn btn-primary btn-lock" id="form-button">Update</button>
 
     </form>
   </div>

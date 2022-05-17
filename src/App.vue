@@ -31,4 +31,9 @@ export default {
   transition: opacity .3s ease-out;
 }
 
+#form-button {
+  background-color: rgba(0, 136, 169, 1);
+  border: none;
+}
+
 </style>
