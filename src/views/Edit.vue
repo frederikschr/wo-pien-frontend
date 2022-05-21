@@ -83,7 +83,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { session, people, item } from '../mixins'
+import { session, people, item, request } from '../mixins'
 import axios from 'axios'
 
 export default {
@@ -156,8 +156,7 @@ export default {
     },
     async commitChanges () {
       const app = this
-      var failed = false
-      await axios.patch('/session-edit', {
+      const data = {
         ids: { session_id: this.session.id },
         address: this.session.address,
         date: this.session.date,
@@ -165,33 +164,11 @@ export default {
         members: this.members,
         items: this.session.items,
         del_items: this.del_items
-      },
-      {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        }
-      }).catch(function (e) {
-        failed = true
-        if (e.response != null) {
-          if (e.response.status === 401) {
-            app.$store.dispatch('user', null)
-            app.$router.push('/')
-          } else {
-            const error = Object.values(e.response.data)[0][0]
-            app.$store.dispatch('flashed', { message: error, success: false })
-          }
-        } else {
-          app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
-        }
-      }).then(function (response) {
-        if (!failed) {
-          app.$store.dispatch('flashed', { message: response.data.message, success: true })
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-          app.getSession(false, true)
-        }
-      }).finally(function () {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      })
+      }
+      const response = await request.methods.postData('patch', '/session-edit', data, app)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      app.getSession(false, true)
+      app.$store.dispatch('flashed', { message: response.data.message, success: true })
     },
     returnToSession () {
       this.$router.push('/view-session/' + this.$route.params.id)

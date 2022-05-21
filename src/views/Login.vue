@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { request } from '../mixins.js'
 
 export default {
   name: 'Login',
@@ -33,28 +33,21 @@ export default {
     async handleLog () {
       if (this.name !== '' && this.password !== '') {
         const app = this
-        await axios.get('user', {
-          params: {
-            name: this.name,
-            password: this.password
-          }
-        }).catch(function (e) {
-          if (e.response != null) {
-            app.$store.dispatch('flashed', { message: e.response.data.error, success: false })
-          } else {
-            app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
-          }
-        }).then(function (response) {
-          localStorage.setItem('token', response.data.token)
-          app.$store.dispatch('user', response.data.user)
-          app.$store.dispatch('flashed', { message: 'Logged in successfully', success: true })
-          app.$store.dispatch('all_users', response.data.all_users)
-        })
+        const response = await request.methods.fetchData('/user', {
+          name: this.name,
+          password: this.password
+        }, app)
+
+        localStorage.setItem('token', response.data.token)
+        app.$store.dispatch('user', response.data.user)
+        app.$store.dispatch('flashed', { message: 'Logged in successfully', success: true })
+        app.$store.dispatch('all_users', response.data.all_users)
         this.$router.push('/')
       }
     }
   }
 }
+
 </script>
 
 <style>

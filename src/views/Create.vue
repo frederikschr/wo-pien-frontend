@@ -95,9 +95,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { mapGetters } from 'vuex'
-import { people, item } from '../mixins'
+import { people, item, request } from '../mixins'
 
 export default {
   name: 'Create',
@@ -128,8 +127,7 @@ export default {
     async handleCreate () {
       if (this.name !== '' && this.address !== '' && this.date !== '' && this.time !== '' && this.members.length > 1) {
         const app = this
-        var failed = false
-        await axios.post('/session', {
+        const data = {
           name: this.name,
           description: this.desciption,
           address: this.address,
@@ -137,30 +135,13 @@ export default {
           time: this.time,
           members: this.members,
           items: this.items
-        },
-        {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
-          }
-        }).catch(function (e) {
-          failed = true
-          if (e.response != null) {
-            if (e.response.status === 401) {
-              app.$store.dispatch('user', null)
-              app.$router.push('/')
-            } else {
-              const error = Object.values(e.response.data)[0][0]
-              app.$store.dispatch('flashed', { message: error, success: false })
-            }
-          } else {
-            app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
-          }
-        }).then(function () {
-          if (!failed) {
-            app.$store.dispatch('flashed', { message: 'Successfully created ' + app.name, success: true })
-            app.$router.push('/')
-          }
-        })
+        }
+        const reponse = await request.methods.postData('post', '/session', data, app)
+        if (typeof reponse !== 'undefined') {
+          app.$store.dispatch('flashed', { message: 'Successfully created ' + app.name, success: true })
+          app.$router.push('/')
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     },
     addGroup (group) {

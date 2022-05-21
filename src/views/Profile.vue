@@ -41,6 +41,7 @@
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
+import { request } from '../mixins'
 
 export default {
   name: 'Profile',
@@ -69,30 +70,15 @@ export default {
     },
     async updateProfile () {
       const app = this
-      await axios.post('/profile', {
+      const data = {
         username: this.user_profile.username,
         email: this.user_profile.email,
         promille_record: this.user_profile.promille_record
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        }
-      }).catch(function (e) {
-        if (e.response.status === 401) {
-          app.$store.dispatch('user', null)
-          app.$router.push('/')
-        } else {
-          const error = Object.values(e.response.data)[0][0]
-          app.$store.dispatch('flashed', { message: error, success: false })
-        }
-      }).then(function (response) {
-        app.fetchProfile()
-        app.$store.dispatch('flashed', { message: response.data.message, success: true })
-      }).finally(function () {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      })
+      }
+      const response = await request.methods.postData('post', '/profile', data, app)
+      app.fetchProfile()
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      app.$store.dispatch('flashed', { message: response.data.message, success: true })
     },
     async uploadAvatar () {
       if (this.$refs.file.files.length !== 0) {

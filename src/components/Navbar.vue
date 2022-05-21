@@ -8,6 +8,7 @@
                 <ul class="nav-links" id="nav-links">
                     <li v-if="user"><router-link class="routers-nav" id="logout" to="/logout" @click="logout()">Logout</router-link></li>
                     <li v-if="user"><router-link @click="toggleMenu()" class="routers-nav" to="/profile">Profile</router-link></li>
+                    <li v-if="user"><router-link @click="toggleMenu()" class="routers-nav" to="/statistics">Statistics</router-link></li>
                     <li v-if="!user"><router-link @click="toggleMenu()" class="routers-nav" to="login">Login</router-link></li>
                     <li v-if="!user"><router-link @click="toggleMenu()" class="routers-nav" to="register">Signup</router-link></li>
                     <li><router-link @click="toggleMenu()" class="routers-nav" to="/">Home</router-link></li>
@@ -102,6 +103,7 @@ header {
     list-style: none;
     top: 0px;
     max-height: none;
+    overflow: auto;
 }
 
 .nav-links li {
