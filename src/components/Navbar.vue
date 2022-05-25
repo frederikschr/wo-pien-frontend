@@ -3,7 +3,9 @@
     <div class="nav-bar">
 
       <header>
-              <h1>WOPIEN</h1>
+
+              <img src="../assets/logo.png" class="logo">
+
               <nav>
                 <ul class="nav-links" id="nav-links">
                     <li v-if="user"><router-link class="routers-nav" id="logout" to="/logout" @click="logout()">Logout</router-link></li>
@@ -117,9 +119,9 @@ header {
     color: rgba(0, 136, 169, 1);
 }
 
-.nav-bar h1 {
-    color: white;
-    margin-right: auto;
+.logo {
+  width: 10em;
+  margin-right: auto;
 }
 
 .container {

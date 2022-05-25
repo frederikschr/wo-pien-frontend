@@ -77,15 +77,15 @@
         </div><br>
 
         <button class="btn btn-primary btn-lock" id="form-button">Update</button>
+        <button type="button" class="btn btn-primary btn-lock" @click="leaveSession()" style="background: #F62020; margin: 2em; border: none;">Leave</button>
 
     </form>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import { mapGetters } from 'vuex'
-import { session } from '../mixins'
+import { session, request } from '../mixins'
 
 export default {
   name: 'Session',
@@ -116,29 +116,15 @@ export default {
     },
     async handleUpdate () {
       const app = this
-      await axios.patch('/bring-items', {
+      const data = {
         updated_items: this.my_items,
         removed_items: this.del_items,
         session_id: this.session.id
-      },
-      {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        }
-      }).catch(function (e) {
-        if (e.response.status === 401) {
-          app.$store.dispatch('user', null)
-          app.$router.push('/')
-        } else {
-          const error = Object.values(e.response.data)[0][0]
-          app.$store.dispatch('flashed', { message: error, success: false })
-        }
-      }).then(function (response) {
-        app.$store.dispatch('flashed', { message: response.data.message, success: true })
-        app.getSession(true, false)
-      }).finally(function () {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      })
+      }
+      const response = await request.methods.postData('patch', '/bring-items', data, app)
+      app.getSession(true, false)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      app.$store.dispatch('flashed', { message: response.data.message, success: true })
     },
     bringItem (item) {
       for (var i = 0; i < this.my_items.length; i++) {
@@ -161,6 +147,17 @@ export default {
     },
     editSession () {
       this.$router.push('/edit-session/' + this.$route.params.id)
+    },
+    async leaveSession () {
+      if (confirm('Are you sure you want to delete this session?')) {
+        const app = this
+        const data = {
+          session_id: this.session.id
+        }
+        const response = await request.methods.postData('patch', '/session', data, app)
+        this.$router.push('/home')
+        app.$store.dispatch('flashed', { message: response.data.message, success: true })
+      }
     }
   }
 }

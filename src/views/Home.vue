@@ -50,6 +50,7 @@ export default {
     const app = this
     var failed = false
     if (this.user != null) {
+      console.log(localStorage.getItem('token'))
       await axios.get('/session', {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token')

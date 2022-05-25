@@ -3,9 +3,10 @@ import axios from 'axios'
 const session = {
   methods: {
     async getSession (inview, setMembers) {
+      const app = this
       const response = await request.methods.fetchData('/session', {
         id: this.$route.params.id
-      })
+      }, app)
 
       this.session = response.data.session
       this.del_items = []
@@ -30,7 +31,7 @@ const people = {
     addPerson (target, member) {
       if (member !== '') {
         for (var i = 0; i < target.length; i++) {
-          if (target[i].split(' ').join('') === member.split(' ').join('')) {
+          if (target[i].split(' ').join('') === member.split(' ').join('') || !(this.all_users.some(user => user === member))) {
             this.person = ''
             this.found_member = ''
             return false
@@ -101,6 +102,8 @@ const item = {
 const request = {
   methods: {
     async fetchData (url, params, app) {
+      console.log(localStorage.getItem('token'))
+
       const response = await axios.get(url, {
         params: params,
         headers: {
