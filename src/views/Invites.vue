@@ -21,6 +21,7 @@
 
 <script>
 import axios from 'axios'
+import { request } from '../mixins'
 
 export default {
   name: 'Invites',
@@ -57,29 +58,14 @@ export default {
     async handleInvite (session, accepted) {
       if (confirm('Are you sure you want to ' + (accepted === true ? 'accept' : 'decline') + ' this session?')) {
         const app = this
-        var failed = false
-        await axios.patch('/session', {
+        const data = {
           session: session,
           accepted: accepted
-        },
-        {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
-          }
-        }).catch(function (e) {
-          failed = true
-          if (e.response.status === 401) {
-            app.$store.dispatch('user', null)
-            app.$router.push('/')
-          } else {
-            console.log(e)
-          }
-        }).then(function (response) {
-          if (!failed) {
-            app.$store.dispatch('flashed', { message: response.data.message, success: true })
-            app.getInvites()
-          }
-        })
+        }
+
+        const response = await request.methods.postData('patch', '/session', data, app)
+        app.getInvites()
+        app.$store.dispatch('flashed', { message: response.data.message, success: true })
       }
     }
   }

@@ -54,7 +54,6 @@ const people = {
       }
     },
     findPerson (person) {
-      console.log(person)
       if (person !== '') {
         for (var i = 0; i < this.all_users.length; i++) {
           if (this.all_users[i].includes(person) && this.all_users[i] !== this.user.username) {
@@ -90,7 +89,6 @@ const item = {
         if (target[i] === item) {
           target.splice(i, 1)
           if (Object.prototype.hasOwnProperty.call(item, 'id')) {
-            console.log(this.del_items)
             this.del_items.push(item)
           }
         }
@@ -102,8 +100,6 @@ const item = {
 const request = {
   methods: {
     async fetchData (url, params, app) {
-      console.log(localStorage.getItem('token'))
-
       const response = await axios.get(url, {
         params: params,
         headers: {

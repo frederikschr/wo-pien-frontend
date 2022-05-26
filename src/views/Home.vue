@@ -50,7 +50,6 @@ export default {
     const app = this
     var failed = false
     if (this.user != null) {
-      console.log(localStorage.getItem('token'))
       await axios.get('/session', {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -83,7 +82,6 @@ export default {
     onFileChange (e) {
       const file = e.target.files[0]
       const url = URL.createObjectURL(file)
-      console.log(url)
       this.url = url
     }
   },

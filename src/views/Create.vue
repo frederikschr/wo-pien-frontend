@@ -121,7 +121,6 @@ export default {
       this.$router.push('/')
     } else {
       this.members.push(this.user.username)
-      console.log(this.all_users)
     }
   },
   methods: {
