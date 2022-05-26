@@ -37,9 +37,6 @@ export default {
           name: this.name,
           password: this.password
         }, app)
-
-        console.log(response.data)
-
         localStorage.setItem('token', response.data.token)
         app.$store.dispatch('user', response.data.user)
         app.$store.dispatch('flashed', { message: 'Logged in successfully', success: true })

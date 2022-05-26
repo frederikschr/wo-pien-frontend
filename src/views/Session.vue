@@ -77,7 +77,7 @@
         </div><br>
 
         <button class="btn btn-primary btn-lock" id="form-button">Update</button>
-        <button type="button" class="btn btn-primary btn-lock" @click="leaveSession()" style="background: #F62020; margin: 2em; border: none;">Leave</button>
+        <button v-if="user.id !== session.owner.id" type="button" class="btn btn-primary btn-lock" @click="leaveSession()" style="background: #F62020; margin: 2em; border: none;">Leave</button>
 
     </form>
   </div>
@@ -152,10 +152,10 @@ export default {
       if (confirm('Are you sure you want to delete this session?')) {
         const app = this
         const data = {
-          session_id: this.session.id
+          session: this.session.id
         }
         const response = await request.methods.postData('patch', '/session', data, app)
-        this.$router.push('/home')
+        this.$router.push('/')
         app.$store.dispatch('flashed', { message: response.data.message, success: true })
       }
     }

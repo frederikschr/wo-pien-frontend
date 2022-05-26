@@ -83,7 +83,16 @@ export default {
     async uploadAvatar () {
       if (this.$refs.file.files.length !== 0) {
         const formData = new FormData()
-        formData.append('file', this.$refs.file.files[0])
+        const file = this.$refs.file.files[0]
+        const parts = file.name.split('.')
+        const ending = parts[parts.length - 1].toLowerCase()
+
+        if (ending !== 'png' && ending !== 'jpg') {
+          this.$store.dispatch('flashed', { message: 'Filetype must be png or jpg', success: false })
+          return
+        }
+
+        formData.append('file', file)
         await axios.post('/avatar',
           formData,
           {
