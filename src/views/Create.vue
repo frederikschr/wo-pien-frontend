@@ -39,7 +39,7 @@
           </div><br>
 
           <b>Members</b>
-          <div id="people" style="overflow-y: scroll; height:10em;">
+          <div id="people" style="overflow-y: scroll; max-height:10em;">
             <div class="person" v-for="person in members" :key="person">
               {{ person }}
               <button class="del-person" v-if="person != this.user.username" @click="delPerson(person, this.members)"><i class="fa fa-close" style="color: red"></i></button>
@@ -67,7 +67,7 @@
           </label>
         </div>
 
-        <div class="items">
+        <div v-if="items.length !== 0" class="items">
           <table class="items-table">
             <thead>
               <tr>
@@ -220,7 +220,7 @@ textarea {
 }
 
 .items {
-  height: 10em;
+  max-height: 10em;
   overflow-y: scroll;
 }
 
