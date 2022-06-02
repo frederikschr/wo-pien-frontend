@@ -53,7 +53,7 @@
           </label>
       </div>
 
-      <div class="items">
+      <div v-if="items.length !== 0" class="items">
         <table class="items-table">
           <thead>
             <tr>

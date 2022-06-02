@@ -42,8 +42,8 @@
                     <td><i @click="bringItem(item)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1)"></i></td>
                   </tr>
                 </tbody><br>
-              </table>
-          </div><br><br>
+              </table><br>
+          </div>
 
           <div v-if="my_items.length !== 0" style="max-height: 15em; overflow-y: scroll;">
             <b>Your Items</b><br><br>
@@ -64,7 +64,33 @@
                   <td><button type="button" style="background: white; cursor: pointer;" @click="removeItem(item)"><i class="fa fa-close" style="color: red;"></i></button></td>
                 </tr>
               </tbody>
+            </table><br>
+          </div>
+
+          <label>Add Item</label>
+          <div class="items-add">
+            <input id="item" v-model='item_name' type="text" class="form-control" maxlength="20" placeholder="Enter Item"/>
+            <input type="number" v-model='item_amount' class="form-control" placeholder="Amount">
+            <button type="button" @click="addItem(this.new_items)" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%; background-color: rgba(0, 136, 169, 1); border: none;">Add</button>
+
+            <div v-if="new_items.length !== 0" class="items">
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <td><b>Item</b></td>
+                  <td align="center"><b>Amount</b> </td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="item" v-for="item in new_items" :key="item" style="color: black">
+                  <td>{{ item.name }}</td>
+                  <td align="center">{{ item.amount }}</td>
+                  <button type="button" class="del-item" @click="delItem(item, this.new_items)"><i class="fa fa-close" style="color: red;"></i></button>
+                </tr>
+              </tbody>
             </table>
+           </div>
+
           </div><br>
 
           <b>Costs</b><br><br>
@@ -85,11 +111,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { session, request } from '../mixins'
+import { session, request, item } from '../mixins'
 
 export default {
   name: 'Session',
-  mixins: [session],
+  mixins: [session, item],
   created () {
     if (this.$store.state.user == null || !this.userInSession()) {
       this.$router.push('/')
@@ -99,7 +125,10 @@ export default {
     return {
       session: { name: '', description: '' },
       my_items: [],
-      del_items: []
+      del_items: [],
+      item_name: '',
+      item_amount: 1,
+      new_items: []
     }
   },
   computed: {

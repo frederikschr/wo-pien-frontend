@@ -77,11 +77,17 @@ const item = {
             return false
           }
         }
-        var byHost = document.getElementById('flexCheckDefault')
-        target.push({ name: this.item_name.trim(), amount: this.item_amount, byHost: byHost.checked })
+        var byHostElmnt = document.getElementById('flexCheckDefault')
+        var byHost = false
+        if (byHostElmnt !== null) {
+          byHostElmnt.checked = false
+          if (byHost === true) {
+            byHost = true
+          }
+        }
+        target.push({ name: this.item_name.trim(), amount: this.item_amount, byHost: byHost })
         this.item_name = ''
         this.item_amount = 1
-        byHost.checked = false
       }
     },
     delItem (item, target) {
