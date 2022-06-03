@@ -26,8 +26,8 @@
         <hr>
         <label><i>Items</i></label><br><br>
         <b>Items</b><br>
-        <div v-if="session.items.length !== 0" class="session-items" style="width: 100%;">
-            <div style="max-height: 15em; overflow-y: scroll;">
+        <div class="session-items" style="width: 100%;">
+            <div v-if="session.items.length !== 0" style="max-height: 15em; overflow-y: scroll;">
               <table class="all-items">
                 <thead>
                   <tr>
@@ -58,8 +58,7 @@
               <tbody>
                 <tr v-for="item in my_items" :key="item">
                   <td>{{ item.name }}</td>
-                  <td v-if="!item.already_existed"><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount - item.amount_brought }}</p></td>
-                  <td v-else><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p> / {{ item.amount }}</p></td>
+                  <td><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p></p></td>
                   <td><input type="number" v-model="item.price" class="form-control"></td>
                   <td><button type="button" style="background: white; cursor: pointer;" @click="removeItem(item)"><i class="fa fa-close" style="color: red;"></i></button></td>
                 </tr>

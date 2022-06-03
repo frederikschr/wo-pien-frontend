@@ -81,10 +81,10 @@ const item = {
         var byHostElmnt = document.getElementById('flexCheckDefault')
         var byHost = false
         if (byHostElmnt !== null) {
-          byHostElmnt.checked = false
-          if (byHost === true) {
+          if (byHostElmnt.checked === true) {
             byHost = true
           }
+          byHostElmnt.checked = false
         }
         target.push({ name: this.item_name.trim(), amount: this.item_amount, byHost: byHost })
         this.item_name = ''
