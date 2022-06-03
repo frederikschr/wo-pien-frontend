@@ -67,8 +67,8 @@
             </table><br>
           </div>
 
-          <label>Add Item</label>
-          <div class="items-add">
+          <div v-if="user.id !== session.owner.id" class="items-add">
+            <label>Add Item</label><br>
             <input id="item" v-model='item_name' type="text" class="form-control" maxlength="20" placeholder="Enter Item"/>
             <input type="number" v-model='item_amount' class="form-control" placeholder="Amount">
             <button type="button" @click="addItem(this.new_items)" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%; background-color: rgba(0, 136, 169, 1); border: none;">Add</button>
@@ -145,10 +145,12 @@ export default {
     },
     async handleUpdate () {
       const app = this
+      console.log(this.new_items)
       const data = {
         updated_items: this.my_items,
         removed_items: this.del_items,
-        session_id: this.session.id
+        session_id: this.session.id,
+        new_items: this.new_items
       }
       const response = await request.methods.postData('patch', '/bring-items', data, app)
       app.getSession(true, false)

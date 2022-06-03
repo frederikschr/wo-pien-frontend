@@ -10,6 +10,7 @@ const session = {
 
       this.session = response.data.session
       this.del_items = []
+      this.new_items = []
       if (inview === true) {
         this.my_items = this.session.my_items
         for (var i = 0; i < this.my_items.length; i++) {
