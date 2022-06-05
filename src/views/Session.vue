@@ -88,21 +88,43 @@
                 </tr>
               </tbody>
             </table>
-           </div>
-
+            </div>
           </div><br>
 
-          <b>Costs</b><br><br>
-          <p>Total session value: {{ session.total_value }}€</p><br>
-          <p>Host costs: {{ session.host_costs }}€</p><br>
-          <p>Price / Guest:</p>
-          <p v-if="session.members.length !== 1"> {{ session.host_costs / (session.members.length - 1) }}€</p><br>
-          <p>Your expenses: {{ session.my_costs }}€</p>
+          <div class="bringings" v-if="session.member_items.length !== 0">
+            <b>Bringings</b><br><br>
+            <table class="all-bringings">
+              <thead>
+                <tr>
+                  <td>Member</td>
+                  <td>Costs</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="bringing" v-for="[username, costs] of Object.entries(session.member_items)" :key="username" style="color: black;">
+                  <td>{{ username }}</td>
+                  <td>{{ costs }}€</td>
+                </tr>
+              </tbody>
 
-        </div><br>
+            </table>
 
-        <button class="btn btn-primary btn-lock" id="form-button">Update</button>
-        <button v-if="user.id !== session.owner.id" type="button" class="btn btn-primary btn-lock" @click="leaveSession()" style="background: #F62020; margin: 2em; border: none;">Leave</button>
+          </div>
+
+        </div>
+
+        <div><br>
+        <b>Costs</b><br><br>
+        <p>Total session value: {{ session.total_value }}€</p><br>
+        <p>Host costs: {{ session.host_costs }}€</p><br>
+        <p>Price / Guest:</p>
+        <p v-if="session.members.length !== 1"> {{ session.host_costs / (session.members.length - 1) }}€</p><br>
+        <p>Your expenses: {{ session.my_costs }}€</p>
+
+      </div><br>
+
+      <button class="btn btn-primary btn-lock" id="form-button">Update</button>
+      <button v-if="user.id !== session.owner.id" type="button" class="btn btn-primary btn-lock" @click="leaveSession()" style="background: #F62020; margin: 2em; border: none;">Leave</button>
 
     </form>
   </div>
@@ -144,7 +166,7 @@ export default {
     },
     async handleUpdate () {
       const app = this
-      console.log(this.new_items)
+      console.log(this.session)
       const data = {
         updated_items: this.my_items,
         removed_items: this.del_items,
@@ -229,17 +251,17 @@ label {
   table-layout: fixed;
 }
 
-.all-items thead td, .my-items thead td {
+.all-items thead td, .my-items thead td, .all-bringings thead td {
   border-bottom: 3px solid rgba(0, 136, 169, .3);
 }
 
-.all-items td, .my-items td {
+.all-items td, .my-items td, .all-bringings td {
   background: none;
   text-align: center;
   border-right: 3px solid rgba(0, 136, 169, .3);
 }
 
-.all-items td {
+.all-items td, .all-bringings td {
   padding: .5em;
 }
 

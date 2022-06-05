@@ -87,7 +87,7 @@ export default {
         const parts = file.name.split('.')
         const ending = parts[parts.length - 1].toLowerCase()
 
-        if (ending !== 'png' && ending !== 'jpg') {
+        if (ending !== 'png' && ending !== 'jpg' && ending !== 'jpeg') {
           this.$store.dispatch('flashed', { message: 'Filetype must be png or jpg', success: false })
           return
         }
