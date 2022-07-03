@@ -18,60 +18,9 @@
           <input type="time" class="form-control" v-model="session.time" placeholder="Enter date" min="2022-03-01" max="2023-01-01"/>
       </div>
 
-    <label><i>People</i></label>
-    <div class="people">
-        <div class="input-group">
-          <input type="text" v-model="person" @input="findPerson(this.person)" class="form-control" id="members-field" maxlength="20" placeholder="Enter username"/>
-          <button type="button" @click="addPerson(this.members, this.person)" class="btn btn-primary btn-lock" style="background-color: rgba(0, 136, 169, 1); border: none;">Add</button>
-        </div>
-      </div>
+      <MemberManager :target="members" />
 
-      <div class="find-member" v-if="found_member !== ''" style="height: 2em; margin-top: 1em;">
-          <p>{{ found_member }}</p>
-          <i @click="addPerson(this.members, this.found_member)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1); float: right;"></i>
-      </div><br>
-
-      <b>Members</b>
-      <div class="members-list">
-        <div class="person" v-for="member in members" :key="member">
-          {{ member }}
-          <button type="button" class="del-person" v-if="member != this.user.username" @click="delPerson(member, this.members)"><i class="fa fa-close" style="color: red"></i></button>
-        </div>
-      </div><br>
-
-      <label><i>Items</i></label>
-      <div class="form-group">
-          <label style="margin-top: 2em">Items</label>
-          <div class="items-add">
-              <input id="item" v-model='item_name' type="text" class="form-control" maxlength="20" placeholder="Enter Item"/>
-              <input type="number" v-model='item_amount' class="form-control" placeholder="Amount">
-              <button type="button" @click="addItem(this.session.items)" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%; background-color: rgba(0, 136, 169, 1); border: none;">Add</button>
-          </div>
-          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" style="margin: 1em;">
-          <label class="form-check-label" for="flexCheckDefault" style="margin: 1em; color: rgb(0, 136, 169)">
-             Host
-          </label>
-      </div>
-
-      <div v-if="session.items.length !== 0" class="items">
-        <table class="items-table">
-          <thead>
-            <tr>
-              <td><b>Item</b></td>
-              <td align="center"><b>Amount</b> </td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="item" v-for="item in session.items" :key="item" style="color: black">
-              <td v-if="!item.byHost">{{ item.name }}</td>
-              <td v-if="!item.byHost" align="center"><input type="number" v-model='item.amount' class="form-control"></td>
-              <td v-if="item.byHost" style="color: rgba(0, 136, 169, 1)">{{ item.name }}</td>
-              <td v-if="item.byHost" style="color: rgba(0, 136, 169, 1)"><input type="number" v-model='item.amount' class="form-control"></td>
-              <button type="button" class="del-item" @click="delItem(item, this.session.items)"><i class="fa fa-close" style="color: red;"></i></button>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <ItemManager :target="session.items" :delItems="del_items" />
 
       <button class="btn btn-primary btn-lock" id="form-button">Commit</button>
       <button type="button" class="btn btn-primary btn-lock" @click="delSession()" style="background: #F62020; margin: 2em; border: none;">Delete</button>
@@ -83,12 +32,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { session, people, item, request } from '../mixins'
+import { session, item, request } from '../mixins'
 import axios from 'axios'
+import MemberManager from '@/components/Member_Manager.vue'
+import ItemManager from '@/components/Item_Manager.vue'
 
 export default {
   name: 'Edit',
-  mixins: [session, people, item],
+  mixins: [session, item],
+  components: { MemberManager, ItemManager },
   created () {
     if (this.$store.state.user === null || !this.userIsOwner()) {
       this.$router.push('/')
@@ -101,11 +53,7 @@ export default {
       session: null,
       items: [],
       del_items: [],
-      item_name: '',
-      item_amount: 1,
-      members: [],
-      person: '',
-      found_member: ''
+      members: []
     }
   },
   computed: {

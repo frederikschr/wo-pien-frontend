@@ -110,7 +110,6 @@
             </table>
 
           </div>
-
         </div>
 
         <div><br>
@@ -144,7 +143,7 @@ export default {
   },
   data () {
     return {
-      session: { name: '', description: '' },
+      session: { name: '', description: '', member_items: [] },
       my_items: [],
       del_items: [],
       item_name: '',

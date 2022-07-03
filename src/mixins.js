@@ -7,7 +7,6 @@ const session = {
       const response = await request.methods.fetchData('/session', {
         id: this.$route.params.id
       }, app)
-
       this.session = response.data.session
       this.del_items = []
       this.new_items = []
@@ -44,6 +43,13 @@ const people = {
         var people = document.getElementById('people')
         if (people) {
           people.scrollTop = people.scrollHeight
+        }
+      }
+    },
+    addGroup (group, members) {
+      for (var i = 0; i < group.members.length; i++) {
+        if (!members.includes(group.members[i])) {
+          members.push(group.members[i])
         }
       }
     },
@@ -91,12 +97,12 @@ const item = {
         this.item_amount = 1
       }
     },
-    delItem (item, target) {
+    delItem (item, target, delItems) {
       for (var i = 0; i < target.length; i++) {
         if (target[i] === item) {
           target.splice(i, 1)
           if (Object.prototype.hasOwnProperty.call(item, 'id')) {
-            this.del_items.push(item)
+            delItems.push(item)
           }
         }
       }
