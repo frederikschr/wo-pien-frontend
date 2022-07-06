@@ -153,6 +153,21 @@ const request = {
       })
       return response
     }
+  },
+  google: {
+    methods: {
+      async getCoordsFromAddress (address) {
+        // const API_KEY = process.env.VUE_APP_GOOGLE_API_KEY
+        const API_KEY = 'AIzaSyCNjNK1aqmZ_V6PPqdt9kPZNMd8JGbZCvw'
+        const URL = 'https://maps.googleapis.com/maps/api/geocode/json'
+        const params = { address: address, key: API_KEY }
+        const response = await axios.get(URL, {
+          params: params
+        })
+        const coords = response.data.results[0].geometry.location
+        return coords
+      }
+    }
   }
 }
 

@@ -1,4 +1,5 @@
 <template>
+  <transition name="flashed">
   <div v-if="flashed" class="flash">
       <div @click="delFlash()" v-if="flashed.success" class="alert alert-success" role="alert">
         {{ flashed.message }}
@@ -9,6 +10,7 @@
         <button type="button" class="btn-close" aria-label="Close"></button>
       </div>
   </div>
+  </transition>
 </template>
 <script>
 import { mapGetters } from 'vuex'
@@ -32,6 +34,14 @@ export default {
 
 .flash button {
   float: right;
+}
+
+.flashed-enter-active, .flashed-leave-active {
+  transition: opacity .5s;
+}
+
+.flashed-enter-from, .flashed-leave-to {
+  opacity: 0;
 }
 
 @media only screen and (max-width: 700px) {

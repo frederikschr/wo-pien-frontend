@@ -3,32 +3,37 @@
     <h1>Create dicke Piener session</h1>
 
      <form @submit.prevent="handleCreate()">
-        <div class="form-group">
-            <label>Name</label>
-            <input type="text" class="form-control" v-model="name" maxlength="30" placeholder="Enter name of session"/>
+
+        <div class="basic-data" v-motion :initial="{ y: 100, opacity: 0 }" :enter="{ y: 0, opacity: 1, transition: {type: 'spring', delay: 200, stiffness: 25}}">
+
+          <div class="form-group">
+              <label>Name</label>
+              <input type="text" class="form-control" v-model="name" maxlength="30" placeholder="Enter name of session"/>
+          </div>
+
+          <div class="form-group" id="description">
+              <label>Description</label>
+              <textarea v-model="desciption" cols="20" rows="5" placeholder="Add description" maxlength="300"></textarea>
+          </div>
+          <div class="form-group">
+              <label>Address</label>
+              <input type="text" class="form-control" v-model="address" maxlength="35" placeholder="Enter address"/>
+          </div>
+          <div class="form-group">
+              <label>Date</label>
+              <input type="date" class="form-control" v-model="date" placeholder="Enter date" min="01-03-2022" max="01-01-2023"/>
+          </div>
+
+          <div class="form-group">
+              <label>Time</label>
+              <input type="time" class="form-control" v-model="time" placeholder="Enter date" min="2022-03-01" max="2023-01-01"/>
+          </div>
+
         </div>
 
-        <div class="form-group" id="description">
-            <label>Description</label>
-            <textarea v-model="desciption" cols="20" rows="5" placeholder="Add description" maxlength="300"></textarea>
-        </div>
-        <div class="form-group">
-            <label>Address</label>
-            <input type="text" class="form-control" v-model="address" maxlength="35" placeholder="Enter address"/>
-        </div>
-        <div class="form-group">
-            <label>Date</label>
-            <input type="date" class="form-control" v-model="date" placeholder="Enter date" min="01-03-2022" max="01-01-2023"/>
-        </div>
+        <MemberManager :target="members" v-motion :initial="{ x: 50, opacity: 0 }" :visibleOnce="{ x: 0, opacity: 1, transition: { type: 'spring', delay: 200, stiffness: 25}}" />
 
-        <div class="form-group">
-            <label>Time</label>
-            <input type="time" class="form-control" v-model="time" placeholder="Enter date" min="2022-03-01" max="2023-01-01"/>
-        </div>
-
-        <MemberManager :target="members" />
-
-        <ItemManager :target="items" />
+        <ItemManager :target="items" v-motion :initial="{ x: -50, opacity: 0 }" :visibleOnce="{ x: 0, opacity: 1, transition: { type: 'spring', delay: 200, stiffness: 25}}" /><br>
 
         <button class="btn btn-primary btn-lock" id="form-button">Create</button>
 
@@ -67,6 +72,7 @@ export default {
   },
   methods: {
     async handleCreate () {
+      const coords = await request.google.methods.getCoordsFromAddress(this.address)
       if (this.name !== '' && this.address !== '' && this.date !== '' && this.time !== '' && this.members.length > 1) {
         const app = this
         const data = {
@@ -76,7 +82,8 @@ export default {
           date: this.date,
           time: this.time,
           members: this.members,
-          items: this.items
+          items: this.items,
+          coords: coords
         }
         const reponse = await request.methods.postData('post', '/session', data, app)
         if (typeof reponse !== 'undefined') {

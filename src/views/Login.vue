@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { request } from '../mixins.js'
+import { request } from '../mixins'
 
 export default {
   name: 'Login',

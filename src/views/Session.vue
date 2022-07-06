@@ -16,7 +16,12 @@
           <b>Date:</b><p>{{ session.date}}</p><br>
           <b>Time:</b><p>{{ session.time}}</p>
         </div>
-        <hr>
+        <hr><br>
+
+        <Map v-if="session.coords !== 'undefinded'" :lat="session.coords.lat" :lng="session.coords.lng" />
+
+        <br><hr>
+
         <label><i>People</i></label>
         <div class="people">
           <b>Accepted:</b><p v-for="member in session.members" :key="member.id">{{ member.username }}</p><br>
@@ -24,6 +29,7 @@
           <u>Total:</u><p>{{ session.invited.length + session.members.length }}</p>
         </div>
         <hr>
+
         <label><i>Items</i></label><br><br>
         <b>Items</b><br>
         <div class="session-items" style="width: 100%;">
@@ -132,10 +138,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import { session, request, item } from '../mixins'
+import Map from '@/components/Map.vue'
 
 export default {
   name: 'Session',
   mixins: [session, item],
+  components: { Map },
   created () {
     if (this.$store.state.user == null || !this.userInSession()) {
       this.$router.push('/')
@@ -165,7 +173,6 @@ export default {
     },
     async handleUpdate () {
       const app = this
-      console.log(this.session)
       const data = {
         updated_items: this.my_items,
         removed_items: this.del_items,

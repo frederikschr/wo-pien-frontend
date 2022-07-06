@@ -1,5 +1,5 @@
 <template>
-  <div class="form-goup">
+  <div class="form-group">
     <label>Members</label>
     <div class="input-group">
       <input type="text" v-model="person" @input="findPerson(this.person)" class="form-control" id="members-field" maxlength="20" placeholder="Enter username"/>
@@ -25,7 +25,7 @@
         <button class="add-group" @click="addGroup(group, this.target)">{{ group.name }}</button>
       </div>
     </div>
-</div>
+  </div>
 
 </template>
 

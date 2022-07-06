@@ -21,7 +21,7 @@
       <div class="sessions" v-if="sessions.length !== 0">
         <ul>
           <li v-for="session in sessions" :key="session.name">
-            <div @click="loadPage(session.id)" class="session">
+            <div @click="loadPage(session.id)" class="session" v-motion :initial="{ opacity: 0}" :enter="{ opacity: 1, transition: {type: 'spring', stiffness: 25 }}">
               <h2>{{ session.name }}</h2>
               <img style="border-radius: 50%; width: 2em; height: 2em;" :src="`data:image/png;base64, ${session.owner.avatar}`">
               <p>{{ session.owner.username }}</p>

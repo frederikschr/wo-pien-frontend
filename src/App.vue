@@ -9,6 +9,9 @@
 </template>
 
 <script>
+/* eslint-disable no-undef */
+/* eslint-disable no-new */
+
 import Navbar from '@/components/Navbar.vue'
 import Flash from '@/components/Flash.vue'
 
