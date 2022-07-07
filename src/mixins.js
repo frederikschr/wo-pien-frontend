@@ -119,6 +119,7 @@ const request = {
           Authorization: 'Bearer ' + localStorage.getItem('token')
         }
       }).catch(function (e) {
+        console.log(e)
         if (e.response != null) {
           if (e.response.status === 401) {
             app.$store.dispatch('user', null)
