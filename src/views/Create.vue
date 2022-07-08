@@ -73,6 +73,7 @@ export default {
   methods: {
     async handleCreate () {
       const coords = await request.google.methods.getCoordsFromAddress(this.address)
+      console.log(coords)
       if (this.name !== '' && this.address !== '' && this.date !== '' && this.time !== '' && this.members.length > 1) {
         const app = this
         const data = {
@@ -82,8 +83,7 @@ export default {
           date: this.date,
           time: this.time,
           members: this.members,
-          items: this.items,
-          coords: coords
+          items: this.items
         }
         const reponse = await request.methods.postData('post', '/session', data, app)
         if (typeof reponse !== 'undefined') {
