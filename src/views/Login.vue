@@ -69,7 +69,7 @@ export default {
 
 @media only screen and (max-width: 700px) {
     .login {
-        margin: 25% auto;
+        margin: 15% auto;
     }
 }
 

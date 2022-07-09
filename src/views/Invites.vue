@@ -76,7 +76,6 @@ export default {
 
 .invites {
   text-align: center;
-  padding-top: 100px;
   width: 75%;
   margin: 5% auto;
 }
@@ -109,6 +108,12 @@ hr {
   border-radius: 5px;
   margin: auto 0;
   margin-top: 1.5em;
+}
+
+@media only screen and (max-width: 700px) {
+    .invites {
+        margin: 15% auto;
+    }
 }
 
 </style>

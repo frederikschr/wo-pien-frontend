@@ -95,9 +95,9 @@ export default {
 
 .home {
   text-align: center;
-  padding-top: 100px;
+  padding-top: 4em;
   width: 75%;
-  margin: 5% auto;
+  margin: 0% auto;
 }
 
  .directions {

@@ -319,7 +319,7 @@ label {
 
 @media only screen and (max-width: 700px) {
     .view-session {
-        margin: 25% auto;
+        margin: 15% auto;
         width: 80%;
     }
 }

@@ -1,16 +1,18 @@
 <template>
-  <transition name="flashed">
-  <div v-if="flashed" class="flash">
-      <div @click="delFlash()" v-if="flashed.success" class="alert alert-success" role="alert">
-        {{ flashed.message }}
-        <button type="button" class="btn-close" aria-label="Close"></button>
-      </div>
-      <div @click="delFlash()" v-else class="alert alert-danger" role="alert">
-        {{ flashed.message }}
-        <button type="button" class="btn-close" aria-label="Close"></button>
-      </div>
+  <div class="wrapper">
+    <transition name="flashed">
+    <div v-if="flashed" class="flash">
+        <div @click="delFlash()" v-if="flashed.success" class="alert alert-success" role="alert">
+          {{ flashed.message }}
+          <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+        <div @click="delFlash()" v-else class="alert alert-danger" role="alert">
+          {{ flashed.message }}
+          <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+    </div>
+    </transition>
   </div>
-  </transition>
 </template>
 <script>
 import { mapGetters } from 'vuex'
@@ -28,7 +30,7 @@ export default {
 }
 </script>
 <style>
-.flash {
+.wrapper {
   height: 4em;
 }
 

@@ -83,7 +83,7 @@ export default {
 
 @media only screen and (max-width: 700px) {
     .register {
-        margin: 25% auto;
+        margin: 15% auto;
     }
 }
 

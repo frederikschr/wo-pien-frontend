@@ -137,7 +137,7 @@ textarea {
 
 @media only screen and (max-width: 700px) {
     .create {
-        margin: 25% auto;
+        margin: 15% auto;
         width: 75%;
     }
 }
