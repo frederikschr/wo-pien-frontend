@@ -8,6 +8,7 @@ export default {
   created () {
     this.$store.state.user = null
     localStorage.removeItem('token')
+    sessionStorage.clear()
     this.$router.push('/')
   }
 }

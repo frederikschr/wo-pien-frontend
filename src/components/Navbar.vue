@@ -36,10 +36,6 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'Navbar',
-  created () {
-    this.$store.dispatch('user', null)
-    localStorage.removeItem('token')
-  },
   methods: {
     toggleMenu () {
       if (screen.width < 700) {

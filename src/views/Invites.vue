@@ -7,9 +7,9 @@
         <li class="session">
           <h3>{{ session.name }}</h3>
           <p>{{ session.description }}</p><br>
-          <b><i class="fa fa-calendar-o" aria-hidden="true" style="padding: 1em 0.5em;"></i>{{ session.date }}</b>
-          <b><i class="fa fa-clock-o" aria-hidden="true" style="padding: 1em 0.5em;"></i>{{ session.time }}</b><br>
-          <p><i class="fa fa-user" aria-hidden="true" style="padding: 1em 0.5em;"></i>{{ session.owner.username }}</p><br>
+          <b><i class="fa-solid fa-calendar-days" aria-hidden="true" style="padding-right: .5em;"></i>{{ session.date }}</b>
+          <b><i class="fa-solid fa-clock" aria-hidden="true" style="padding-right: .5em; margin-left: .5em;"></i>{{ session.time }}</b><br>
+          <p><i class="fa fa-user" aria-hidden="true" style="padding-right: .5em; margin-top: 1em;"></i>{{ session.owner.username }}</p><br>
           <button class="handle" @click="handleInvite(session.id, true)"><i class="fa fa-check" style="color: rgba(0, 136, 169, 1)"></i></button>
           <button class="handle" @click="handleInvite(session.id, false)"><i class="fa fa-close" style="color: red"></i></button>
           <hr>

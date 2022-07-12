@@ -8,7 +8,7 @@
 
     <div class="find-member" v-if="found_member !== ''" style="height: 2em; margin-top: 1em;">
       <p>{{ found_member }}</p>
-      <i @click="addPerson(this.target, this.found_member)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1); float: right;"></i>
+      <button class="add-person" @click="addPerson(this.target, this.found_member)"><i class="fa fa-plus" style="color: rgba(0, 136, 169, 1); float: right;"></i></button>
     </div><br>
 
     <b>Members</b>
@@ -70,6 +70,13 @@ export default {
     color: red;
     background-color: white;
     float: right;
+}
+
+.add-person {
+  cursor: pointer;
+  color: rgba(0, 136, 169, 1);
+  background-color: white;
+  float: right;
 }
 
 </style>

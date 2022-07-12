@@ -1,58 +1,57 @@
 <template>
   <div class="view-session">
       <form @submit.prevent="handleUpdate()">
-        <div class="edit" v-if="user.id === session.owner.id">
+        <div class="edit-session" v-if="user.id === session.owner.id">
           <button type="button" @click="editSession()" style="float: right;">Edit</button><br><br><br>
         </div>
-        <div class="basic">
+
+        <div class="session-header">
           <h1>{{ session.name }}</h1>
           <p>{{ session.description }}</p>
         </div>
-        <hr>
-        <label><i>General Info</i></label>
-        <div class="general">
-          <b>Host:</b><p>{{ session.owner.username}}</p><br>
-          <b>Address:</b><p>{{ session.address}}</p><br>
-          <b>Date:</b><p>{{ session.date}}</p><br>
-          <b>Time:</b><p>{{ session.time}}</p>
+
+        <h3><label style="border-bottom: 3px solid rgba(0, 136, 169, 1);">General Info</label></h3>
+        <div class="general-info">
+          <i class="fa fa-user" style="padding-right: .5em;"></i>Host:<p><b>{{ session.owner.username}}</b></p><br>
+          <i class="fa-solid fa-location-dot" style="padding-right: .5em;"></i>Address:<p><b>{{ session.address}}</b></p><br>
+          <i class="fa-solid fa-calendar-days" style="padding-right: .5em;"></i>Date:<p><b>{{ session.date}}</b></p><br>
+          <i class="fa-solid fa-clock" style="padding-right: .5em;"></i>Time:<p><b>{{ session.time}}</b></p>
         </div>
-        <hr><br>
 
-        <Map v-if="session.coords !== 'undefinded'" :lat="session.coords.lat" :lng="session.coords.lng" />
+        <h3><label style="border-bottom: 3px solid rgba(0, 136, 169, 1);">Map</label></h3>
+        <div class="map">
+          <Map v-if="session.coords !== 'undefinded'" :lat="session.coords.lat" :lng="session.coords.lng" />
+        </div><br>
 
-        <br><hr>
-
-        <label><i>People</i></label>
+        <h3><label style="border-bottom: 3px solid rgba(0, 136, 169, 1);">People</label></h3>
         <div class="people">
-          <b>Accepted:</b><p v-for="member in session.members" :key="member.id">{{ member.username }}</p><br>
-          <b>Invited:</b><p v-for="invited in session.invited" :key="invited.id">{{ invited.username }}</p><br>
-          <u>Total:</u><p>{{ session.invited.length + session.members.length }}</p>
+          <i class="fa-solid fa-user-check" style="padding-right: .5em;"></i>Accepted:<p v-for="member in session.members" :key="member.id"><b>{{ member.username }}</b></p><br>
+          <i class="fa-solid fa-envelope" style="padding-right: .5em;"></i>Invited:<p v-for="invited in session.invited" :key="invited.id"><b>{{ invited.username }}</b></p><br><br>
+          <p>Total: <b>{{ session.invited.length + session.members.length }}</b></p>
         </div>
-        <hr>
 
-        <label><i>Items</i></label><br><br>
-        <b>Items</b><br>
+        <h3><label style="border-bottom: 3px solid rgba(0, 136, 169, 1);">Items</label></h3>
         <div class="session-items" style="width: 100%;">
-            <div v-if="session.items.length !== 0" style="max-height: 15em; overflow-y: scroll;">
-              <table class="all-items">
-                <thead>
-                  <tr>
-                    <td>Name</td>
-                    <td align="center">QTY</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in session.items" :key="item">
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.amount_brought }} / {{ item.amount }}</td>
-                    <td><i @click="bringItem(item)" class="fa fa-plus" style="color: rgba(0, 136, 169, 1)"></i></td>
-                  </tr>
-                </tbody><br>
-              </table><br>
+          <div v-if="session.items.length !== 0" style="max-height: 15em; overflow-y: scroll;"><br>
+            <table class="all-items">
+              <thead>
+                <tr>
+                  <td>Name</td>
+                  <td align="center">QTY</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in session.items" :key="item">
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.amount_brought }} / {{ item.amount }}</td>
+                  <td @click="bringItem(item)"><i class="fa fa-plus" style="color: rgba(0, 136, 169, 1)"></i></td>
+                </tr>
+              </tbody><br>
+            </table>
           </div>
 
           <div v-if="my_items.length !== 0" style="max-height: 15em; overflow-y: scroll;">
-            <b>Your Items</b><br><br>
+            <br><b>Your Items</b><br><br>
             <table class="my-items">
               <thead>
                 <tr>
@@ -69,31 +68,31 @@
                   <td><button type="button" style="background: white; cursor: pointer;" @click="removeItem(item)"><i class="fa fa-close" style="color: red;"></i></button></td>
                 </tr>
               </tbody>
-            </table><br>
+            </table><br><br>
           </div>
 
           <div v-if="user.id !== session.owner.id" class="items-add">
-            <label>Add Item</label><br>
+            <b>Add Item</b><br>
             <input id="item" v-model='item_name' type="text" class="form-control" maxlength="20" placeholder="Enter Item"/>
             <input type="number" v-model='item_amount' class="form-control" placeholder="Amount">
             <button type="button" @click="addItem(this.new_items)" class="btn btn-primary btn-lock" style="float: right; margin-top: .5em; max-width: 20%; background-color: rgba(0, 136, 169, 1); border: none;">Add</button>
 
             <div v-if="new_items.length !== 0" class="items">
-            <table class="items-table">
-              <thead>
-                <tr>
-                  <td><b>Item</b></td>
-                  <td align="center"><b>Amount</b> </td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="item" v-for="item in new_items" :key="item" style="color: black">
-                  <td>{{ item.name }}</td>
-                  <td align="center">{{ item.amount }}</td>
-                  <button type="button" class="del-item" @click="delItem(item, this.new_items)"><i class="fa fa-close" style="color: red;"></i></button>
-                </tr>
-              </tbody>
-            </table>
+              <table class="items-table">
+                <thead>
+                  <tr>
+                    <td><b>Item</b></td>
+                    <td align="center"><b>Amount</b> </td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="item" v-for="item in new_items" :key="item" style="color: black">
+                    <td>{{ item.name }}</td>
+                    <td align="center">{{ item.amount }}</td>
+                    <button type="button" class="del-item" @click="delItem(item, this.new_items)"><i class="fa fa-close" style="color: red;"></i></button>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div><br>
 
@@ -116,20 +115,19 @@
             </table>
 
           </div>
-        </div>
+        </div><br>
 
+        <h3><label style="border-bottom: 3px solid rgba(0, 136, 169, 1);">Costs</label></h3>
         <div><br>
-        <b>Costs</b><br><br>
-        <p>Total session value: {{ session.total_value }}€</p><br>
-        <p>Host costs: {{ session.host_costs }}€</p><br>
-        <p>Price / Guest:</p>
-        <p v-if="session.members.length !== 1"> {{ session.host_costs / (session.members.length - 1) }}€</p><br>
-        <p>Your expenses: {{ session.my_costs }}€</p>
+          <p>Total session value: {{ session.total_value }}€</p><br>
+          <p>Host costs: {{ session.host_costs }}€</p><br>
+          <p>Costs / Guest:</p>
+          <p v-if="session.members.length !== 1"> {{ session.host_costs / (session.members.length - 1) }}€</p><br>
+          <p>Your expenses: {{ session.my_costs }}€</p>
+        </div><br>
 
-      </div><br>
-
-      <button class="btn btn-primary btn-lock" id="form-button">Update</button>
-      <button v-if="user.id !== session.owner.id" type="button" class="btn btn-primary btn-lock" @click="leaveSession()" style="background: #F62020; margin: 2em; border: none;">Leave</button>
+        <button class="btn btn-primary btn-lock" id="form-button">Update</button>
+        <button v-if="user.id !== session.owner.id" type="button" class="btn btn-primary btn-lock" @click="leaveSession()" style="background: #F62020; margin: 2em; border: none;">Leave</button>
 
     </form>
   </div>
@@ -154,9 +152,9 @@ export default {
       session: { name: '', description: '', member_items: [] },
       my_items: [],
       del_items: [],
+      new_items: [],
       item_name: '',
-      item_amount: 1,
-      new_items: []
+      item_amount: 1
     }
   },
   computed: {
@@ -229,7 +227,7 @@ export default {
   overflow-wrap: break-word;
 }
 
-.basic {
+.session-header {
   text-align: center;
 }
 
@@ -239,11 +237,15 @@ hr {
   margin: auto 0;
 }
 
-.general, .people, .items {
+.general-info, .people, .items, .map {
   margin-top: 5%;
 }
 
-.general b, p {
+.general-info, .people {
+  padding: .2em 1em;
+}
+
+.general-info b, p {
   display: inline-block;
   padding: .3em;
 }

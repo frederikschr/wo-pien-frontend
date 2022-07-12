@@ -1,6 +1,5 @@
 <template>
   <div id="map"></div>
-
 </template>
 
 <script>
@@ -20,10 +19,8 @@ export default {
   },
   mounted () {
     const map = new Map('map', { center: [this.lat, this.lng], zoom: 12, minZoom: 8 })
-
     const layer = new TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
     map.addLayer(layer)
-
     const marker = new Marker([this.lat, this.lng])
     marker.addTo(map)
     marker.bindPopup('Piener Location').openPopup()
@@ -36,6 +33,7 @@ export default {
 #map {
   width: 100%;
   height: 40vh;
+  border: 2px solid rgba(0, 136, 169, 1);
 }
 
 </style>
