@@ -76,8 +76,8 @@ export default {
   },
 
   methods: {
-    loadPage (session) {
-      this.$router.push('/view-session/' + session)
+    loadPage (sessionID) {
+      this.$router.push('/view-session/' + sessionID)
     },
     onFileChange (e) {
       const file = e.target.files[0]

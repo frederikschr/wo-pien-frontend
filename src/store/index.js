@@ -3,7 +3,12 @@ import createPersistedState from 'vuex-persistedstate'
 
 export default createStore({
   plugins: [createPersistedState({
-    storage: window.sessionStorage
+    storage: window.sessionStorage,
+    reducer: (state) => ({
+      user: state.user,
+      all_users: state.all_users,
+      groups: state.groups
+    })
   })],
   state: {
     user: null,

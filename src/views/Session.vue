@@ -64,7 +64,7 @@
                 <tr v-for="item in my_items" :key="item">
                   <td>{{ item.name }}</td>
                   <td><input v-model="item.bring_amount" class="form-control" type="number" style="width: 50%; display: inline-block;"><p></p></td>
-                  <td><input type="number" v-model="item.price" class="form-control"></td>
+                  <td><input type="number" step=".01" min="1.00" max="999.99" v-model="item.price" @change="validatePrice(item)" class="form-control"></td>
                   <td><button type="button" style="background: white; cursor: pointer;" @click="removeItem(item)"><i class="fa fa-close" style="color: red;"></i></button></td>
                 </tr>
               </tbody>
@@ -214,6 +214,18 @@ export default {
         this.$router.push('/')
         app.$store.dispatch('flashed', { message: response.data.message, success: true })
       }
+    },
+    validatePrice (item) {
+      if (typeof item.price === 'string') {
+        item.price = parseFloat(1)
+        return
+      }
+      const priceFloat = parseFloat(item.price)
+      if (priceFloat < 0 || priceFloat > 1000) {
+        item.price = parseFloat(1)
+        return
+      }
+      item.price = priceFloat.toFixed(2)
     }
   }
 }
@@ -229,12 +241,6 @@ export default {
 
 .session-header {
   text-align: center;
-}
-
-hr {
-  border-top: 4px solid rgba(0, 136, 169, 1);
-  border-radius: 5px;
-  margin: auto 0;
 }
 
 .general-info, .people, .items, .map {
