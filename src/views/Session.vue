@@ -143,7 +143,7 @@ export default {
   mixins: [session, item],
   components: { Map },
   created () {
-    if (this.$store.state.user == null || !this.userInSession()) {
+    if (this.$store.state.user == null) {
       this.$router.push('/')
     } else { this.getSession(true, false) }
   },
@@ -161,14 +161,6 @@ export default {
     ...mapGetters(['user', 'sessions'])
   },
   methods: {
-    userInSession () {
-      for (var i = 0; i < this.sessions.length; i++) {
-        if (this.sessions[i].id === parseInt(this.$route.params.id)) {
-          return true
-        }
-      }
-      return false
-    },
     async handleUpdate () {
       const app = this
       const data = {

@@ -7,20 +7,24 @@ const session = {
       const response = await request.methods.fetchData('/session', {
         id: this.$route.params.id
       }, app)
-      this.session = response.data.session
-      this.del_items = []
-      this.new_items = []
-      if (inview === true) {
-        this.my_items = this.session.my_items
-        for (var i = 0; i < this.my_items.length; i++) {
-          this.my_items[i].already_existed = true
+      try {
+        app.session = response.data.session
+        app.del_items = []
+        app.new_items = []
+        if (inview === true) {
+          app.my_items = app.session.my_items
+          for (var i = 0; i < app.my_items.length; i++) {
+            app.my_items[i].already_existed = true
+          }
         }
-      }
-      if (setMembers === true) {
-        this.members = []
-        for (var x = 0; x < this.session.members.length; x++) {
-          this.members.push(this.session.members[x].username)
+        if (setMembers === true) {
+          app.members = []
+          for (var x = 0; x < app.session.members.length; x++) {
+            app.members.push(app.session.members[x].username)
+          }
         }
+      } catch {
+        app.$router.push('/')
       }
     }
   }
