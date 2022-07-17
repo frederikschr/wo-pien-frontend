@@ -1,7 +1,7 @@
 <template>
   <div class="view-session">
       <form @submit.prevent="handleUpdate()">
-        <div class="edit-session" v-if="user.id === session.owner.id">
+        <div class="session-edit" v-if="user.id === session.owner.id">
           <button type="button" @click="editSession()" style="float: right;">Edit</button><br><br><br>
         </div>
 

@@ -69,6 +69,7 @@ export default {
       ).then(response => { app.user_profile = response.data.user })
     },
     async updateProfile () {
+      console.log(this.user_profile.avatar)
       const app = this
       const data = {
         username: this.user_profile.username,
