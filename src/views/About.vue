@@ -14,7 +14,20 @@
        and plan some sessions!<br><br>
 
        Frederik
+    </p><br>
+
+    <h3><label style="border-bottom: 3px solid rgba(0, 136, 169, 1);">Technical Details</label></h3>
+    <p>
+      WoPien can just like most others web apps be split into frontend and backend. The frontend, which you are currently using as
+      you are reading this, is build with the JavaScript Framework Vue and its only function is to display information that it
+      receives from the backend. The backend is written in Python and relies on the microframework Flask. It provides REST
+      endpoints which allow communication with the apps resources and are then called by the Frontend. The user authorization happens
+      via JWT. The requests to the backend from the frontend are not hitting it directly and fist go trough a NGINX Webserver which functions
+      as a reverse proxy as well as a load balancer. The entire backend is containerized using the container service Docker which makes scaling
+      easy, since more instances of the app can created basend on the amount of traffic, which is balanced by NGINX
+      automatically. The Frontend is hosted on Netlify while the Backend is running on AWS.
     </p>
+
   </div>
 
 </template>

@@ -67,7 +67,7 @@ const people = {
     findPerson (person) {
       if (person !== '') {
         for (var i = 0; i < this.all_users.length; i++) {
-          if (this.all_users[i].includes(person) && this.all_users[i] !== this.user.username) {
+          if (this.all_users[i].toLowerCase().includes(person.toLowerCase()) && this.all_users[i] !== this.user.username) {
             this.found_member = this.all_users[i]
             return
           }
