@@ -114,6 +114,29 @@ const item = {
   }
 }
 
+const error = {
+  methods: {
+    handleFlashExecption (e, app) {
+      console.log(e.response.data)
+      if (e.response != null) {
+        if (e.response.status === 401) {
+          app.$store.dispatch('user', null)
+          app.$router.push('/')
+        } else {
+          if (Object.hasOwnProperty.call(e.response.data, 'error')) {
+            app.$store.dispatch('flashed', { message: e.response.data.error, success: false })
+          } else {
+            const error = Object.values(e.response.data)[0][0]
+            app.$store.dispatch('flashed', { message: error, success: false })
+          }
+        }
+      } else {
+        app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
+      }
+    }
+  }
+}
+
 const request = {
   methods: {
     async fetchData (url, params, app) {
@@ -122,19 +145,7 @@ const request = {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token')
         }
-      }).catch(function (e) {
-        console.log(e)
-        if (e.response != null) {
-          if (e.response.status === 401) {
-            app.$store.dispatch('user', null)
-            app.$router.push('/')
-          } else {
-            app.$store.dispatch('flashed', { message: e.response.data.error, success: false })
-          }
-        } else {
-          app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
-        }
-      })
+      }).catch(e => error.methods.handleFlashExecption(e, app))
       return response
     },
     async postData (method, url, data, app) {
@@ -143,20 +154,20 @@ const request = {
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('token')
           }
-        }).catch(function (e) {
-        if (e.response != null) {
-          if (e.response.status === 401) {
-            app.$store.dispatch('user', null)
-            app.$router.push('/')
-          } else {
-            const error = Object.values(e.response.data)[0][0]
-            app.$store.dispatch('flashed', { message: error, success: false })
-          }
-        } else {
-          app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
-        }
-      })
+        }).catch(e => error.methods.handleFlashExecption(e, app))
       return response
+    },
+    async deleteData (url, data, app) {
+      await axios.delete(url, {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        },
+        data: data
+      }).catch(e => error.methods.handleFlashExecption(e, app))
+        .then(function (response) {
+          app.$store.dispatch('flashed', { message: response.data.message, success: true })
+          app.$router.push('/')
+        })
     }
   },
   google: {

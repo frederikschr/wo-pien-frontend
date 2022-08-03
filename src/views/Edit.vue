@@ -38,7 +38,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import { session, item, request } from '../mixins'
-import axios from 'axios'
 import MemberManager from '@/components/Member_Manager.vue'
 import ItemManager from '@/components/Item_Manager.vue'
 import Map from '@/components/Map.vue'
@@ -79,33 +78,8 @@ export default {
     async delSession () {
       if (confirm('Are you sure you want to delete this session?')) {
         const app = this
-        var failed = false
-        await axios.delete('/session-edit', {
-          data: {
-            session_id: this.session.id
-          },
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
-          }
-        }).catch(function (e) {
-          failed = true
-          if (e.response != null) {
-            if (e.response.status === 401) {
-              app.$store.dispatch('user', null)
-              app.$router.push('/')
-            } else {
-              const error = Object.values(e.response.data)[0][0]
-              app.$store.dispatch('flashed', { message: error, success: false })
-            }
-          } else {
-            app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
-          }
-        }).then(function (response) {
-          if (!failed) {
-            app.$store.dispatch('flashed', { message: response.data.message, success: true })
-            app.$router.push('/')
-          }
-        })
+        const data = { session_id: this.session.id }
+        await request.methods.deleteData('/session-edit', data, app)
       }
     },
     async commitChanges () {

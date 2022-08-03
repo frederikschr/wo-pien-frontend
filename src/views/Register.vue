@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { request } from '../mixins'
 
 export default {
   name: 'Register',
@@ -36,27 +36,14 @@ export default {
   methods: {
     async handleReg () {
       const app = this
-      var failed = false
-      if (this.name !== '' && this.email !== '' && this.password !== '') {
-        await axios.post('/user', {
-          name: this.name,
-          email: this.email,
-          password: this.password
-        }).catch(function (e) {
-          failed = true
-          if (e.response != null) {
-            const error = Object.values(e.response.data)[0][0]
-            app.$store.dispatch('flashed', { message: error, success: false })
-          } else {
-            app.$store.dispatch('flashed', { message: 'Internal Server Error', success: false })
-          }
-        }).then(function (response) {
-          if (!failed) {
-            app.$store.dispatch('flashed', { message: response.data.message, success: true })
-            app.$router.push('/login')
-          }
-        })
+      const data = {
+        name: this.name,
+        email: this.email,
+        password: this.password
       }
+      const response = await request.methods.postData('post', '/user', data, app)
+      app.$store.dispatch('flashed', { message: response.data.message, success: true })
+      app.$router.push('/login')
     }
   }
 }

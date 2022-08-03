@@ -25,6 +25,7 @@
       </div><br>
 
       <button class="btn btn-primary btn-lock" id="form-button">Update</button>
+      <button type="button" class="btn btn-primary btn-lock" @click="delUser()" style="background: #F62020; margin: 2em; border: none;">Delete</button>
 
     </form><br>
 
@@ -35,7 +36,6 @@
     </div>
 
   </div>
-
 </template>
 
 <script>
@@ -69,7 +69,6 @@ export default {
       ).then(response => { app.user_profile = response.data.user })
     },
     async updateProfile () {
-      console.log(this.user_profile.avatar)
       const app = this
       const data = {
         username: this.user_profile.username,
@@ -103,6 +102,14 @@ export default {
             }
           }
         ).then(() => this.fetchProfile())
+      }
+    },
+    async delUser () {
+      if (confirm('Are you sure you want to delete your account?')) {
+        const app = this
+        await request.methods.deleteData('/user', null, app)
+        this.$store.dispatch('user', null)
+        localStorage.removeItem('token')
       }
     },
     openUpload () {
